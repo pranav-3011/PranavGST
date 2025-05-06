@@ -1,35 +1,48 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Navbar from "./Components/Navbar";
+import Sidebar from "./Components/Sidebar";
+import Verification from "./Pages/Main/Verification";
+import Investigation from "./Pages/Main/Investigation";
+import EntryDetails from "./Pages/Main/EntryDetails";
+import Dashboard from "./Pages/Main/Dashboard";
+import Login from "./Pages/Main/Login";
+import PrivateRoutes from "./Utils/Auth/PrivateRoutes";
+import PublicRoutes from "./Utils/Auth/PublicRoutes";
+import { useAuth } from "./Utils/Auth/useAuth";
+import ErrorPage from "./Pages/Main/ErrorPage";
+
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const isAuthenticated = useAuth();
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <BrowserRouter>
+      <div className="flex flex-col w-full">
+        {isAuthenticated && <Navbar />}
+        <div className="flex flex-row ">
+          {isAuthenticated && <Sidebar />}
+          <div className={`${isAuthenticated ? "p-4" : ""}`}>
+            <Routes>
+              <Route element={<PrivateRoutes />}>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/investigation" element={<Investigation />} />
+                <Route path="/verification" element={<Verification />} />
+                <Route path="/entry-details" element={<EntryDetails />} />
+              </Route>
+
+              <Route element={<PublicRoutes />}>
+                <Route path="/login" element={<Login />} />
+              </Route>
+
+              <Route path="*" element={<ErrorPage />} />
+            </Routes>
+          </div>
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
