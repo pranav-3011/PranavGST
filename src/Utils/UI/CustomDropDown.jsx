@@ -5,6 +5,7 @@ const CustomDropDown = ({
   name,
   value,
   className = "",
+  placeholder = "",
   ...rest
 }) => {
   return (
@@ -14,6 +15,11 @@ const CustomDropDown = ({
       className={`px-2 py-1 rounded-sm border border-gray-400 ${className}`}
       {...rest}
     >
+      {placeholder && (
+        <option value="" disabled>
+          {placeholder}
+        </option>
+      )}
       {values.map((option, idx) =>
         typeof option === "object" ? (
           <option key={option.value || idx} value={option.value}>

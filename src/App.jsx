@@ -23,7 +23,11 @@ function App() {
         {isAuthenticated && <Navbar />}
         <div className="flex flex-row ">
           {isAuthenticated && <Sidebar />}
-          <div className={`${isAuthenticated ? "p-4" : ""}`}>
+          <div
+            className={`${
+              isAuthenticated ? "p-4" : ""
+            } w-full h-[calc(100vh-4rem)] overflow-y-auto`}
+          >
             <Routes>
               <Route element={<PrivateRoutes />}>
                 <Route path="/" element={<Dashboard />} />

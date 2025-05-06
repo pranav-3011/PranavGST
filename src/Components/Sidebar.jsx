@@ -1,49 +1,73 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import CustomButton from "../Utils/UI/CustomButton";
+import {
+  LogOut,
+  Home,
+  FileCheck,
+  Search,
+  FileText,
+  Shield,
+} from "lucide-react";
 
 const navItems = [
-  { name: "Dashboard", path: "/" },
-  { name: "Verification", path: "/verification" },
-  { name: "Investigation", path: "/investigation" },
-  { name: "EntryDetails", path: "/entry-details" },
+  { name: "Dashboard", path: "/", icon: Home },
+  { name: "Verification", path: "/verification", icon: FileCheck },
+  { name: "Investigation", path: "/investigation", icon: Search },
+  { name: "Entry Details", path: "/entry-details", icon: FileText },
 ];
 
 const Sidebar = () => {
   const location = useLocation();
 
   return (
-    <div className="h-[calc(100vh-4rem)] w-56 bg-[#112d4e] text-white shadow-lg flex flex-col py-8 px-4 z-40">
-      {/* <div className="mb-8 text-lg font-semibold tracking-wide text-center">
-        Menu
-      </div> */}
-      <nav className="flex flex-col gap-2">
-        {navItems.map((item) => (
-          <Link
-            key={item.path}
-            to={item.path}
-            className={`rounded-md px-4 py-3 transition-all duration-200 font-medium hover:bg-[#3f72af] hover:text-white ${
-              location.pathname === item.path
-                ? "bg-[#3f72af] text-white shadow"
-                : "text-gray-200"
-            }`}
-          >
-            {item.name}
-          </Link>
-        ))}
+    <div className="h-[calc(100vh-4rem)] w-64 bg-white flex flex-col z-40 border-r border-gray-100">
+      <div className="p-6 border-b border-gray-100">
+        <div className="flex items-center gap-3">
+          <Shield className="w-8 h-8 text-blue-600" />
+          <div>
+            <h2 className="text-lg font-semibold text-gray-800">
+              Indian Customs
+            </h2>
+            <p className="text-xs text-gray-500">GST Portal</p>
+          </div>
+        </div>
+      </div>
+
+      <nav className="flex-1 px-4 py-6">
+        <div className="space-y-2">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
+                  location.pathname === item.path
+                    ? "bg-blue-50 text-blue-600 shadow-sm"
+                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                }`}
+              >
+                <Icon className="w-5 h-5" />
+                {item.name}
+              </Link>
+            );
+          })}
+        </div>
       </nav>
-      <div className="mt-auto flex flex-col items-center">
+
+      <div className="p-4 border-t border-gray-100">
         <button
-          className="w-full py-2 px-4 mb-4 rounded-md bg-red-500 text-white font-semibold hover:bg-gray-300 transition-all duration-200 shadow cursor-pointer"
+          className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-all shadow-sm"
           onClick={() => {
             localStorage.removeItem("token");
             window.location.href = "/login";
           }}
         >
-          Logout
+          <LogOut className="w-4 h-4" />
+          Sign Out
         </button>
-        <div className="text-xs text-gray-400 text-center">
-          &copy; {new Date().getFullYear()} GST
+        <div className="mt-4 text-xs text-gray-400 text-center">
+          &copy; {new Date().getFullYear()} Indian Customs. All rights reserved.
         </div>
       </div>
     </div>
