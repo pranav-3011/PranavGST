@@ -15,7 +15,10 @@ const onRefreshed = (newAccessToken) => {
 };
 
 export const AxiosWrapper = async (method, route, data = {}) => {
-  let token = JSON.parse(localStorage.getItem("token")); // use when encrypted
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  if (!userData?.access) {
+    throw new Error("No access token found");
+  }
 
   const url = `${import.meta.env.VITE_APP_BACKEND_URL}/api/${route}`;
 
@@ -23,7 +26,7 @@ export const AxiosWrapper = async (method, route, data = {}) => {
     method: method.toLowerCase(),
     url: url,
     headers: {
-      Authorization: `Bearer ${token.access}`,
+      Authorization: `Bearer ${userData.access}`,
     },
   };
 
@@ -41,11 +44,11 @@ export const AxiosWrapper = async (method, route, data = {}) => {
       if (!isRefreshing) {
         isRefreshing = true;
         try {
-          const newAccessToken = await refreshAccessToken(token.refresh);
+          const newAccessToken = await refreshAccessToken(userData.refresh);
           if (newAccessToken) {
-            token.access = newAccessToken;
-            localStorage.setItem("token", JSON.stringify(token));
-            config.headers.Authorization = `Bearer ${token.access}`;
+            userData.access = newAccessToken;
+            localStorage.setItem("userData", JSON.stringify(userData));
+            config.headers.Authorization = `Bearer ${userData.access}`;
             isRefreshing = false;
             onRefreshed(newAccessToken);
             const res = await axios(config);
@@ -53,7 +56,7 @@ export const AxiosWrapper = async (method, route, data = {}) => {
           }
         } catch (refreshError) {
           console.error("Error refreshing access token:", refreshError);
-          localStorage.clear();
+          localStorage.removeItem("userData");
           window.location.href = "/login";
           throw refreshError;
         }

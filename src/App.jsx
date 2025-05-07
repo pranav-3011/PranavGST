@@ -13,6 +13,7 @@ import { useAuth } from "./Utils/Auth/useAuth";
 import ErrorPage from "./Pages/Main/ErrorPage";
 import Settings from "./Pages/Main/Settings";
 import Alerts from "./Pages/Main/Alerts";
+import InvestigationDetails from "./Pages/Main/InvestigationDetails";
 
 import "./App.css";
 
@@ -21,14 +22,14 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className="flex flex-col w-full">
+      <div className="h-screen flex flex-col">
         {isAuthenticated && <Navbar />}
-        <div className="flex flex-row ">
+        <div className="flex-1 flex overflow-hidden">
           {isAuthenticated && <Sidebar />}
-          <div
+          <main
             className={`${
               isAuthenticated ? "p-4" : ""
-            } w-full h-[calc(100vh-4rem)] overflow-y-auto`}
+            } flex-1 overflow-y-auto`}
           >
             <Routes>
               <Route element={<PrivateRoutes />}>
@@ -36,6 +37,7 @@ function App() {
                 <Route path="/investigation" element={<Investigation />} />
                 <Route path="/verification" element={<Verification />} />
                 <Route path="/entry-details" element={<EntryDetails />} />
+                <Route path="/investigation/:fileNumber" element={<InvestigationDetails />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/alerts" element={<Alerts />} />
               </Route>
@@ -46,7 +48,7 @@ function App() {
 
               <Route path="*" element={<ErrorPage />} />
             </Routes>
-          </div>
+          </main>
         </div>
       </div>
     </BrowserRouter>

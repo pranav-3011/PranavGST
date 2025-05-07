@@ -2,159 +2,94 @@ import React, { useState, useEffect } from "react";
 import InputBox from "../../Utils/UI/InputBox";
 import CustomButton from "../../Utils/UI/CustomButton";
 import CustomDropDown from "../../Utils/UI/CustomDropDown";
+import { useForm } from "../../Context/FormContext";
 
 const Investigation = () => {
-  // Get current date in YYYY-MM-DD format for date inputs
-  const getCurrentDate = () => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, "0");
-    const day = String(today.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
+  const {
+    formData,
+    taxpayerData,
+    jurisdictionData,
+    sourceOptions,
+    divisionOptions,
+    rangeOptions,
+    isLoading,
+    error,
+    handleChange,
+    handleDateChange,
+    handleTaxpayerChange,
+    handleJurisdictionChange,
+    handleDivisionChange,
+    handleSubmit,
+    postInvestigation,
+    fetchOptions
+  } = useForm();
 
-  // State for source options - would typically be fetched from an API
-  const [sourceOptions, setSourceOptions] = useState([]);
-  const [divisionOptions, setDivisionOptions] = useState([]);
-  const [rangeOptions, setRangeOptions] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  // Form state for investigation
-  const [formData, setFormData] = useState({
-    source: "",
-    file_number: "",
-    e_office_file_no: "",
-    date_of_detection: getCurrentDate(),
-    due_date_of_scn: getCurrentDate(),
-    nature_of_offence: "",
-    period_involved: "",
-  });
-
-  // State for taxpayer details
-  const [taxpayerData, setTaxpayerData] = useState({
-    gstin: "",
-    name: "",
-    trade_name: "",
-    address: "",
-  });
-
-  // Combined state for division and range
-  const [jurisdictionData, setJurisdictionData] = useState({
-    division_name: "",
-    range_name: "",
-  });
-
-  // State for contact person
-  const [contactPersonData, setContactPersonData] = useState({
-    first_name: "",
-    last_name: "",
-    email: "",
-    address: "",
-    phone_number: "",
-  });
-
-  // Handle input changes for investigation form
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  // Handle date input changes
-  const handleDateChange = (e) => {
-    const { name, value } = e.target;
-    // Ensure proper date format
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  // Handle taxpayer data changes
-  const handleTaxpayerChange = (e) => {
-    const { name, value } = e.target;
-    setTaxpayerData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  // Handle jurisdiction data changes (division and range)
-  const handleJurisdictionChange = (e) => {
-    const { name, value } = e.target;
-    setJurisdictionData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  // Handle contact person data changes
-  const handleContactPersonChange = (e) => {
-    const { name, value } = e.target;
-    setContactPersonData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const completeData = {
-      investigation: formData,
-      taxpayer: taxpayerData,
-      jurisdiction: jurisdictionData,
-      contactPerson: contactPersonData,
-    };
-    console.log("Form data submitted:", completeData);
-  };
-
-  // Fetch source and division options when component mounts
+  // Fetch options when component mounts
   useEffect(() => {
-    setSourceOptions([
-      { value: "1", label: "Intelligence" },
-      { value: "2", label: "CIU" },
-      { value: "3", label: "DGARM" },
-      { value: "4", label: "Informant/Complaint" },
-      { value: "5", label: "Reference from other Commissionerate" },
-    ]);
-
-    setDivisionOptions([
-      { value: "1", label: "1" },
-      { value: "2", label: "2" },
-      { value: "3", label: "3" },
-      { value: "4", label: "4" },
-      { value: "5", label: "5" },
-    ]);
-
-    setRangeOptions([
-      { value: "1", label: "1" },
-      { value: "2", label: "2" },
-      { value: "3", label: "3" },
-      { value: "4", label: "4" },
-      { value: "5", label: "5" },
-    ]);
+    fetchOptions();
   }, []);
 
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitError(null);
+    setSubmitSuccess(false);
+
+    try {
+      await postInvestigation();
+      setSubmitSuccess(true);
+    } catch (error) {
+      setSubmitError(error.message || 'Failed to submit investigation');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="text-gray-600">Loading form options...</div>
+      </div>
+    );
+  }
+
   return (
-    <div className="max-w-full mx-auto p-4">
+    <div className="max-w-full mx-auto p-2">
       <div className="mb-4">
         <h1 className="text-2xl font-semibold text-gray-900">
           Investigation Register
         </h1>
-        {/* <p className="text-sm text-gray-600 mt-1">
-          Please fill in all the required information below
-        </p> */}
       </div>
 
-      <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {error && (
+        <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+          {error}
+        </div>
+      )}
+
+      {submitSuccess && (
+        <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
+          Investigation submitted successfully!
+        </div>
+      )}
+
+      {submitError && (
+        <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+          {submitError}
+        </div>
+      )}
+
+      <form onSubmit={handleFormSubmit}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Left Column */}
-          <div className="space-y-8">
+          <div className="space-y-6">
             {/* Investigation Section */}
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-6">
+              <h2 className="text-lg font-medium text-gray-900 mb-4">
                 Investigation Details
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
@@ -216,14 +151,18 @@ const Investigation = () => {
                   />
                 </div>
 
-                <InputBox
-                  name="period_involved"
-                  label="Period Involved"
-                  type="text"
-                  placeholder="Enter period involved"
-                  value={formData.period_involved}
-                  onChange={handleChange}
-                />
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Period Involved
+                  </label>
+                  <input
+                    type="date"
+                    name="period_involved"
+                    className="w-full border border-gray-600 rounded-sm px-3 py-1 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                    value={formData.period_involved}
+                    onChange={handleDateChange}
+                  />
+                </div>
 
                 <InputBox
                   name="nature_of_offence"
@@ -236,9 +175,49 @@ const Investigation = () => {
               </div>
             </div>
 
+            {/* Division & Range Section */}
+            <div className="bg-white border border-gray-200 rounded-lg p-6">
+              <h2 className="text-lg font-medium text-gray-900 mb-4">
+                Division & Range
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Division Name
+                  </label>
+                  <CustomDropDown
+                    name="division_name"
+                    values={divisionOptions}
+                    placeholder="Select division"
+                    value={jurisdictionData.division_name}
+                    onChange={handleDivisionChange}
+                    className="w-full"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Range Name
+                  </label>
+                  <CustomDropDown
+                    name="range_name"
+                    values={rangeOptions}
+                    placeholder="Select range"
+                    value={jurisdictionData.range_name}
+                    onChange={handleJurisdictionChange}
+                    className="w-full"
+                    disabled={!jurisdictionData.division_name}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column */}
+          <div className="space-y-6">
             {/* Taxpayer Details Section */}
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-6">
+              <h2 className="text-lg font-medium text-gray-900 mb-4">
                 Taxpayer Details
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
@@ -252,7 +231,7 @@ const Investigation = () => {
                 />
 
                 <InputBox
-                  name="legal_name"
+                  name="name"
                   label="Legal Name"
                   type="text"
                   placeholder="Enter name"
@@ -274,7 +253,7 @@ const Investigation = () => {
                     PPoB
                   </label>
                   <textarea
-                    name="PPoB"
+                    name="address"
                     rows="3"
                     className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-gray-400"
                     placeholder="Enter address"
@@ -284,110 +263,15 @@ const Investigation = () => {
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Right Column */}
-          <div className="space-y-8">
-            {/* Division and Range Combined Section */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-6">
-                Division & Range
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Division Name
-                  </label>
-                  <CustomDropDown
-                    name="division_name"
-                    values={divisionOptions}
-                    placeholder="Select division"
-                    value={jurisdictionData.division_name}
-                    onChange={handleJurisdictionChange}
-                    className="w-full"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Range Name
-                  </label>
-                  <CustomDropDown
-                    name="range_name"
-                    values={rangeOptions}
-                    placeholder="Select range"
-                    value={jurisdictionData.range_name}
-                    onChange={handleJurisdictionChange}
-                    className="w-full"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Contact Person Section */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-6">
-                Contact Person
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                <InputBox
-                  name="first_name"
-                  label="First Name"
-                  type="text"
-                  placeholder="Enter first name"
-                  value={contactPersonData.first_name}
-                  onChange={handleContactPersonChange}
-                />
-
-                <InputBox
-                  name="last_name"
-                  label="Last Name"
-                  type="text"
-                  placeholder="Enter last name"
-                  value={contactPersonData.last_name}
-                  onChange={handleContactPersonChange}
-                />
-
-                <InputBox
-                  name="email"
-                  label="Email"
-                  type="email"
-                  placeholder="Enter email address"
-                  value={contactPersonData.email}
-                  onChange={handleContactPersonChange}
-                />
-
-                <InputBox
-                  name="phone_number"
-                  label="Phone Number"
-                  type="text"
-                  placeholder="Enter phone number"
-                  value={contactPersonData.phone_number}
-                  onChange={handleContactPersonChange}
-                />
-
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Address
-                  </label>
-                  <textarea
-                    name="address"
-                    rows="3"
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-gray-400"
-                    placeholder="Enter address"
-                    value={contactPersonData.address}
-                    onChange={handleContactPersonChange}
-                  ></textarea>
-                </div>
-              </div>
-            </div>
             {/* Submit Button */}
             <div className="flex justify-end mt-8">
               <CustomButton
                 type="submit"
                 className="bg-gray-900 hover:bg-gray-800 text-white px-8 py-2.5 rounded-md font-medium transition-colors"
+                disabled={isSubmitting}
               >
-                Submit
+                {isSubmitting ? 'Submitting...' : 'Submit'}
               </CustomButton>
             </div>
           </div>
