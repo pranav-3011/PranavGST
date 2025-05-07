@@ -24,6 +24,7 @@ const Investigation = () => {
     file_number: "",
     e_office_file_no: "",
     date_of_detection: getCurrentDate(),
+    due_date_of_scn: getCurrentDate(),
     nature_of_offence: "",
     period_involved: "",
   });
@@ -112,11 +113,11 @@ const Investigation = () => {
   // Fetch source and division options when component mounts
   useEffect(() => {
     setSourceOptions([
-      { value: "1", label: "1" },
-      { value: "2", label: "2" },
-      { value: "3", label: "3" },
-      { value: "4", label: "4" },
-      { value: "5", label: "5" },
+      { value: "1", label: "Intelligence" },
+      { value: "2", label: "CIU" },
+      { value: "3", label: "DGARM" },
+      { value: "4", label: "Informant/Complaint" },
+      { value: "5", label: "Reference from other Commissionerate" },
     ]);
 
     setDivisionOptions([
@@ -196,20 +197,24 @@ const Investigation = () => {
                   <input
                     type="date"
                     name="date_of_detection"
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                    className="w-full border border-gray-600 rounded-sm px-3 py-1 focus:outline-none focus:ring-1 focus:ring-gray-400"
                     value={formData.date_of_detection}
                     onChange={handleDateChange}
                   />
                 </div>
 
-                <InputBox
-                  name="nature_of_offence"
-                  label="Nature of Offence"
-                  type="text"
-                  placeholder="Enter nature of offence"
-                  value={formData.nature_of_offence}
-                  onChange={handleChange}
-                />
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Due Date of SCN
+                  </label>
+                  <input
+                    type="date"
+                    name="due_date_of_scn"
+                    className="w-full border border-gray-600 rounded-sm px-3 py-1 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                    value={formData.due_date_of_scn}
+                    onChange={handleDateChange}
+                  />
+                </div>
 
                 <InputBox
                   name="period_involved"
@@ -217,6 +222,15 @@ const Investigation = () => {
                   type="text"
                   placeholder="Enter period involved"
                   value={formData.period_involved}
+                  onChange={handleChange}
+                />
+
+                <InputBox
+                  name="nature_of_offence"
+                  label="Nature of Offence"
+                  type="text"
+                  placeholder="Enter nature of offence"
+                  value={formData.nature_of_offence}
                   onChange={handleChange}
                 />
               </div>
@@ -238,8 +252,8 @@ const Investigation = () => {
                 />
 
                 <InputBox
-                  name="name"
-                  label="Name"
+                  name="legal_name"
+                  label="Legal Name"
                   type="text"
                   placeholder="Enter name"
                   value={taxpayerData.name}
@@ -257,10 +271,10 @@ const Investigation = () => {
 
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Address
+                    PPoB
                   </label>
                   <textarea
-                    name="address"
+                    name="PPoB"
                     rows="3"
                     className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-gray-400"
                     placeholder="Enter address"
@@ -277,7 +291,7 @@ const Investigation = () => {
             {/* Division and Range Combined Section */}
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <h2 className="text-lg font-medium text-gray-900 mb-6">
-                Jurisdiction
+                Division & Range
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                 <div>

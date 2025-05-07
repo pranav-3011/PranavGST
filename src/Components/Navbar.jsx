@@ -8,11 +8,11 @@ const Navbar = () => {
   return (
     <div className="w-full h-16 bg-white text-gray-800 flex items-center justify-between px-6 shadow-sm border-b border-gray-100">
       <div className="flex items-center gap-2">
-        <div className="w-44 text-2xl font-bold tracking-tight text-blue-600">
-          Indian GST
+        <div className="text-2xl font-bold tracking-tight text-blue-600">
+          CGST & C.Ex Bhiwandi Commissionerate
         </div>
-        <div className="h-6 w-px bg-gray-200 mx-4"></div>
-        <div className="text-sm text-gray-500">GST Case Monitoring Portal</div>
+        {/* <div className="h-6 w-px bg-gray-200 mx-4"></div>
+        <div className="text-sm text-gray-500">GST Case Monitoring Portal</div> */}
       </div>
 
       <div className="flex items-center gap-4">
