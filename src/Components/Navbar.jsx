@@ -29,7 +29,7 @@ const Navbar = () => {
 
         <Link
           to="/settings"
-          className={`p-3 rounded-lg text-sm font-medium transition-all ${
+          className={`p-3 rounded-full text-sm font-medium transition-all ${
             location.pathname === "/settings"
               ? "bg-blue-50 text-blue-600 shadow-sm"
               : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"

@@ -25,10 +25,8 @@ const Sidebar = () => {
         <div className="flex items-center gap-3">
           <Shield className="w-8 h-8 text-blue-600" />
           <div>
-            <h2 className="text-lg font-semibold text-gray-800">
-              Indian Customs
-            </h2>
-            <p className="text-xs text-gray-500">GST Portal</p>
+            <h2 className="text-lg font-semibold text-gray-800">GST Portal</h2>
+            {/* <p className="text-xs text-gray-500">GST Portal</p> */}
           </div>
         </div>
       </div>
@@ -67,7 +65,8 @@ const Sidebar = () => {
           Sign Out
         </button>
         <div className="mt-4 text-xs text-gray-400 text-center">
-          &copy; {new Date().getFullYear()} Indian Customs. All rights reserved.
+          &copy; {new Date().getFullYear()} GST Case Monitoring Portal. All
+          rights reserved.
         </div>
       </div>
     </div>
