@@ -57,7 +57,7 @@ const Sidebar = () => {
 
       <div className="p-4 border-t border-gray-100">
         <button
-          className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-all shadow-sm"
+          className="w-full cursor-pointer flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-all shadow-sm"
           onClick={() => {
             localStorage.removeItem("token");
             window.location.href = "/login";

@@ -20,7 +20,7 @@ const Login = () => {
   };
 
   return (
-    <div className="h-screen w-screen flex items-center justify-center bg-gray-50">
+    <div className="h-full w-full flex items-center justify-center bg-gray-50">
       <div className="bg-white p-8 rounded-lg shadow-lg w-auto">
         <h2 className="text-2xl font-bold mb-6 text-center text-[#0a2342]">
           Login with OTP
