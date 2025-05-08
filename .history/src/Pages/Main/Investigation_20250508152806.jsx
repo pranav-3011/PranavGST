@@ -366,6 +366,15 @@ const Investigation = () => {
                 onChange={handleTaxpayerChange}
               />
 
+              <InputBox
+                name="trade_number_2"
+                label="Trade Number 2"
+                type="text"
+               // placeholder="Enter trade number 2"
+                value={taxpayerData.trade_number_2}
+                onChange={handleTaxpayerChange}
+              />
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   PPoB <span className="text-red-500">*</span>

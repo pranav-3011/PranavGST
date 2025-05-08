@@ -57,13 +57,13 @@ const InvestigationDetails = () => {
   };
 
   const actionButtons = [
-    { name: 'Inspection Details', component: InspectionDetails },
     { name: 'Investigation Register', component: InvestigationRegister },
     { name: 'Source', component: Source },
     { name: 'Taxpayer Details', component: TaxpayerDetails },
     { name: 'Division', component: Division },
     { name: 'Range', component: Range },
     { name: 'Contact Person', component: ContactPerson },
+    { name: 'Inspection Details', component: InspectionDetails },
     { name: 'Search Details', component: SearchDetails },
     { name: 'Office Conducted Inspection', component: OfficeConductedInspection },
     { name: 'Seizure Details', component: SeizureDetails },
@@ -167,21 +167,7 @@ const InvestigationDetails = () => {
                   </h2>
                 </div>
                 <div className="p-4">
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                      <FileText className="text-gray-500" size={18} />
-                      <div>
-                        <p className="text-sm text-gray-600">File Number</p>
-                        <p className="font-medium">{investigation.file_number || '-'}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                      <Calendar className="text-gray-500" size={18} />
-                      <div>
-                        <p className="text-sm text-gray-600">Date of Detection</p>
-                        <p className="font-medium">{investigation.date_of_detection ? new Date(investigation.date_of_detection).toLocaleDateString() : '-'}</p>
-                      </div>
-                    </div>
+                  <div className="grid grid-cols-2 gap-4">
                     <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                       <Calendar className="text-gray-500" size={18} />
                       <div>
@@ -210,13 +196,6 @@ const InvestigationDetails = () => {
                         <p className="font-medium">{investigation.nature_of_offence || '-'}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                      <FileText className="text-gray-500" size={18} />
-                      <div>
-                        <p className="text-sm text-gray-600">Source</p>
-                        <p className="font-medium">{investigation.source_name || '-'}</p>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -233,7 +212,7 @@ const InvestigationDetails = () => {
                   <div className="p-4">
                     {investigation.taxpayers.map((taxpayer, index) => (
                       <div key={taxpayer.id || index} className="mb-4 last:mb-0">
-                        <div className="grid grid-cols-3 gap-4">
+                        <div className="grid grid-cols-2 gap-4">
                           <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                             <Building className="text-gray-500" size={18} />
                             <div>
@@ -267,20 +246,6 @@ const InvestigationDetails = () => {
                             <div>
                               <p className="text-sm text-gray-600">Phone</p>
                               <p className="font-medium">{taxpayer.phone_number || '-'}</p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                            <Building className="text-gray-500" size={18} />
-                            <div>
-                              <p className="text-sm text-gray-600">Division</p>
-                              <p className="font-medium">{taxpayer.division_name || '-'}</p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                            <Building className="text-gray-500" size={18} />
-                            <div>
-                              <p className="text-sm text-gray-600">Range</p>
-                              <p className="font-medium">{taxpayer.range_name || '-'}</p>
                             </div>
                           </div>
                           <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">

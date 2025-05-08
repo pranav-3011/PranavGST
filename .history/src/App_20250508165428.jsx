@@ -14,6 +14,7 @@ import ErrorPage from "./Pages/Main/ErrorPage";
 import Settings from "./Pages/Main/Settings";
 import Alerts from "./Pages/Main/Alerts";
 import InvestigationDetails from "./Pages/Main/InvestigationDetails";
+import InvestigationPage from "./Pages/Sub/Investigation";
 
 import "./App.css";
 
@@ -34,9 +35,10 @@ function App() {
             <Routes>
               <Route element={<PrivateRoutes />}>
                 <Route path="/" element={<Dashboard />} />
+                <Route path="/investigation" element={<Investigation />} />
                 <Route path="/verification" element={<Verification />} />
                 <Route path="/entry-details" element={<EntryDetails />} />
-                <Route path="/entry-details/investigation" element={<Investigation />} />
+                <Route path="/entry-details/investigation" element={<InvestigationPage />} />
                 <Route path="/investigation/:fileNumber" element={<InvestigationDetails />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/alerts" element={<Alerts />} />

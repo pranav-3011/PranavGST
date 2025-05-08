@@ -57,13 +57,13 @@ const InvestigationDetails = () => {
   };
 
   const actionButtons = [
-    { name: 'Inspection Details', component: InspectionDetails },
     { name: 'Investigation Register', component: InvestigationRegister },
     { name: 'Source', component: Source },
     { name: 'Taxpayer Details', component: TaxpayerDetails },
     { name: 'Division', component: Division },
     { name: 'Range', component: Range },
     { name: 'Contact Person', component: ContactPerson },
+    { name: 'Inspection Details', component: InspectionDetails },
     { name: 'Search Details', component: SearchDetails },
     { name: 'Office Conducted Inspection', component: OfficeConductedInspection },
     { name: 'Seizure Details', component: SeizureDetails },

@@ -3,6 +3,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Box, Typography, Paper, Link, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { AxiosWrapper } from '../../Utils/Auth/AxiosWrapper';
+import AddIcon from '@mui/icons-material/Add';
 
 const EntryDetails = () => {
   const [investigations, setInvestigations] = useState([]);
@@ -153,9 +154,10 @@ const EntryDetails = () => {
         <Typography variant="h5" component="h1">
           Investigation Entries
         </Typography>
-        <Button 
-          variant="contained" 
+        <Button
+          variant="contained"
           color="primary"
+          startIcon={<AddIcon />}
           onClick={() => navigate('/entry-details/investigation')}
         >
           Add Case

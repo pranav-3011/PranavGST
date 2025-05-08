@@ -35,8 +35,9 @@ function App() {
               <Route element={<PrivateRoutes />}>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/verification" element={<Verification />} />
-                <Route path="/entry-details" element={<EntryDetails />} />
-                <Route path="/entry-details/investigation" element={<Investigation />} />
+                <Route path="/entry-details" element={<EntryDetails />} >
+                  <Route path="/entry-details/investigation" element={<Investigation />} />
+                </Route>
                 <Route path="/investigation/:fileNumber" element={<InvestigationDetails />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/alerts" element={<Alerts />} />

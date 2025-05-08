@@ -14,7 +14,7 @@ import {
 const navItems = [
   { name: "Dashboard", path: "/", icon: Home },
   { name: "Verification", path: "/verification", icon: FileCheck },
-  // { name: "Investigation", path: "/investigation", icon: Search },
+  { name: "Investigation", path: "/investigation", icon: Search },
   { name: "Entry Details", path: "/entry-details", icon: FileText },
 ];
 

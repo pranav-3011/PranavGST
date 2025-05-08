@@ -64,6 +64,7 @@ const InvestigationDetails = () => {
     { name: 'Division', component: Division },
     { name: 'Range', component: Range },
     { name: 'Contact Person', component: ContactPerson },
+    
     { name: 'Search Details', component: SearchDetails },
     { name: 'Office Conducted Inspection', component: OfficeConductedInspection },
     { name: 'Seizure Details', component: SeizureDetails },

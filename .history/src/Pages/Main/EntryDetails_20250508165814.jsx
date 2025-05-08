@@ -156,7 +156,7 @@ const EntryDetails = () => {
         <Button 
           variant="contained" 
           color="primary"
-          onClick={() => navigate('/entry-details/investigation')}
+          onClick={() => navigate('/investigation')}
         >
           Add Case
         </Button>
