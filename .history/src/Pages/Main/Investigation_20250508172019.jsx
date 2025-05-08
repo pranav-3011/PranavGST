@@ -133,20 +133,6 @@ const Investigation = () => {
         )}
       </div>
 
-      {/* Back button */}
-      <div className="mb-4">
-        <button
-          type="button"
-          onClick={handleBackToListing}
-          className="inline-flex items-center text-gray-600 hover:text-gray-900"
-        >
-          <svg className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          Back to Listing
-        </button>
-      </div>
-
       {/* Navigation Tabs */}
       <div className="mb-6">
         <nav className="flex space-x-4" aria-label="Tabs">
