@@ -25,18 +25,6 @@ const SeizureDetails = ({ fileNumber }) => {
     model_mark: "",
   });
 
-  // Create a resetForm function to reset form data to initial state
-  const resetFormData = () => {
-    setFormData({
-      date_of_seizure: "",
-      din_on_authorization: "",
-      description_of_goods: "",
-      si_unit: "",
-      quantity: 0,
-      model_mark: "",
-    });
-  };
-
   useEffect(() => {
     if (fileNumber) {
       fetchSeizuresList();
@@ -67,7 +55,14 @@ const SeizureDetails = ({ fileNumber }) => {
         investigation: fileNumber,
       });
       setShowAddForm(false);
-      resetFormData(); // Use resetFormData instead of inline reset
+      setFormData({
+        date_of_seizure: "",
+        din_on_authorization: "",
+        description_of_goods: "",
+        si_unit: "",
+        quantity: 0,
+        model_mark: "",
+      });
       fetchSeizuresList();
       toast.success("Seizure added successfully");
     } catch (error) {
@@ -112,7 +107,6 @@ const SeizureDetails = ({ fileNumber }) => {
       handleViewSeizure(selectedSeizure.id);
       // Refresh the list
       fetchSeizuresList();
-      resetFormData(); // Add reset form data after update
       toast.success("Seizure updated successfully");
     } catch (error) {
       console.error("Error updating seizure:", error);
@@ -216,10 +210,7 @@ const SeizureDetails = ({ fileNumber }) => {
       <div className="max-w-4xl mx-auto p-4">
         <div className="mb-4">
           <button
-            onClick={() => {
-              setIsEditing(false);
-              resetFormData(); // Reset form data when canceling edit
-            }}
+            onClick={() => setIsEditing(false)}
             className="flex items-center text-gray-600 hover:text-blue-600"
           >
             <ArrowLeft size={20} className="mr-2" />
@@ -415,10 +406,7 @@ const SeizureDetails = ({ fileNumber }) => {
       <div className="max-w-4xl mx-auto p-4">
         <div className="mb-4">
           <button
-            onClick={() => {
-              setShowAddForm(false);
-              resetFormData(); // Reset form data when canceling add
-            }}
+            onClick={() => setShowAddForm(false)}
             className="flex items-center text-gray-600 hover:text-blue-600"
           >
             <ArrowLeft size={20} className="mr-2" />
@@ -518,10 +506,7 @@ const SeizureDetails = ({ fileNumber }) => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Seizures</h1>
         <CustomButton
-          onClick={() => {
-            resetFormData(); // Reset form data before showing add form
-            setShowAddForm(true);
-          }}
+          onClick={() => setShowAddForm(true)}
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition-colors flex items-center gap-2"
         >
           <Plus size={20} />

@@ -169,22 +169,6 @@ const SummonsDetails = ({ fileNumber }) => {
     statement_recorded_date: "",
   });
 
-  // Create a resetForm function to reset form data to initial state
-  const resetFormData = () => {
-    setFormData({
-      identification_document: "",
-      document_number: "",
-      name_of_person: "",
-      role_of_person_in_case: "",
-      din_number: "",
-      date_of_issuing: "",
-      issued_by: "",
-      summons_for_date: "",
-      appeared: false,
-      statement_recorded_date: "",
-    });
-  };
-
   useEffect(() => {
     if (fileNumber) {
       fetchSummonsList();
@@ -215,7 +199,18 @@ const SummonsDetails = ({ fileNumber }) => {
         investigation: fileNumber,
       });
       setShowAddForm(false);
-      resetFormData(); // Reset form data after successful add
+      setFormData({
+        identification_document: "",
+        document_number: "",
+        name_of_person: "",
+        role_of_person_in_case: "",
+        din_number: "",
+        date_of_issuing: "",
+        issued_by: "",
+        summons_for_date: "",
+        appeared: false,
+        statement_recorded_date: "",
+      });
       fetchSummonsList();
       toast.success("Summons added successfully");
     } catch (error) {
@@ -262,7 +257,6 @@ const SummonsDetails = ({ fileNumber }) => {
       setIsEditing(false);
       handleViewSummons(selectedSummons.id);
       fetchSummonsList();
-      resetFormData(); // Reset form data after successful update
       toast.success("Summons updated successfully");
     } catch (error) {
       console.error("Error updating summons:", error);
@@ -364,10 +358,7 @@ const SummonsDetails = ({ fileNumber }) => {
       <div className="max-w-4xl mx-auto p-4">
         <div className="mb-4">
           <button
-            onClick={() => {
-              setIsEditing(false);
-              resetFormData(); // Reset form data when canceling edit
-            }}
+            onClick={() => setIsEditing(false)}
             className="flex items-center text-gray-600 hover:text-blue-600"
           >
             <ArrowLeft size={20} className="mr-2" />
@@ -529,10 +520,7 @@ const SummonsDetails = ({ fileNumber }) => {
       <div className="max-w-4xl mx-auto p-4">
         <div className="mb-4">
           <button
-            onClick={() => {
-              setShowAddForm(false);
-              resetFormData(); // Reset form data when canceling add
-            }}
+            onClick={() => setShowAddForm(false)}
             className="flex items-center text-gray-600 hover:text-blue-600"
           >
             <ArrowLeft size={20} className="mr-2" />
@@ -565,10 +553,7 @@ const SummonsDetails = ({ fileNumber }) => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Summons</h1>
         <CustomButton
-          onClick={() => {
-            resetFormData(); // Reset form data before showing add form
-            setShowAddForm(true);
-          }}
+          onClick={() => setShowAddForm(true)}
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition-colors flex items-center gap-2"
         >
           <Plus size={20} />

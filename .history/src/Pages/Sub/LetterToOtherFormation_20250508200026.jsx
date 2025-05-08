@@ -6,68 +6,6 @@ import InputBox from "../../Utils/UI/InputBox";
 import CustomButton from "../../Utils/UI/CustomButton";
 import { toast } from "react-toastify";
 
-// Move LetterForm outside of the main component
-const LetterForm = ({ onSubmit, submitButtonText, formData, handleChange }) => (
-  <form onSubmit={onSubmit} className="p-4">
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <InputBox
-          name="agency_name"
-          label="Agency Name"
-          type="text"
-          value={formData.agency_name}
-          onChange={handleChange}
-          required
-          maxLength={255}
-        />
-        <InputBox
-          name="letter_addressed_to"
-          label="Letter Addressed To"
-          type="text"
-          value={formData.letter_addressed_to}
-          onChange={handleChange}
-          required
-          maxLength={255}
-        />
-      </div>
-
-      <InputBox
-        name="subject_of_letter"
-        label="Subject of Letter"
-        type="text"
-        value={formData.subject_of_letter}
-        onChange={handleChange}
-        required
-        maxLength={255}
-      />
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Letter Issued Date <span className="text-red-500">*</span>
-        </label>
-        <input
-          type="date"
-          name="letter_issued_date"
-          value={formData.letter_issued_date}
-          onChange={handleChange}
-          className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 date-picker"
-          onFocus={(e) => e.target.showPicker()}
-          required
-        />
-      </div>
-
-      <div className="flex justify-end">
-        <CustomButton
-          type="submit"
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium transition-colors"
-        >
-          {submitButtonText}
-        </CustomButton>
-      </div>
-    </div>
-  </form>
-);
-
 const LetterToOtherFormation = ({ fileNumber }) => {
   const navigate = useNavigate();
   const [letters, setLetters] = useState([]);
@@ -263,6 +201,67 @@ const LetterToOtherFormation = ({ fileNumber }) => {
     </div>
   );
 
+  const LetterForm = ({ onSubmit, submitButtonText }) => (
+    <form onSubmit={onSubmit} className="p-4">
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <InputBox
+            name="agency_name"
+            label="Agency Name"
+            type="text"
+            value={formData.agency_name}
+            onChange={handleChange}
+            required
+            maxLength={255}
+          />
+          <InputBox
+            name="letter_addressed_to"
+            label="Letter Addressed To"
+            type="text"
+            value={formData.letter_addressed_to}
+            onChange={handleChange}
+            required
+            maxLength={255}
+          />
+        </div>
+
+        <InputBox
+          name="subject_of_letter"
+          label="Subject of Letter"
+          type="text"
+          value={formData.subject_of_letter}
+          onChange={handleChange}
+          required
+          maxLength={255}
+        />
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Letter Issued Date <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="date"
+            name="letter_issued_date"
+            value={formData.letter_issued_date}
+            onChange={handleChange}
+            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 date-picker"
+            onFocus={(e) => e.target.showPicker()}
+            required
+          />
+        </div>
+
+        <div className="flex justify-end">
+          <CustomButton
+            type="submit"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium transition-colors"
+          >
+            {submitButtonText}
+          </CustomButton>
+        </div>
+      </div>
+    </form>
+  );
+
   if (selectedLetter && isEditing) {
     return (
       <div className="max-w-4xl mx-auto p-4">
@@ -286,12 +285,7 @@ const LetterToOtherFormation = ({ fileNumber }) => {
               Edit Letter
             </h2>
           </div>
-          <LetterForm 
-            onSubmit={handleUpdateLetter} 
-            submitButtonText="Update Letter" 
-            formData={formData}
-            handleChange={handleChange}
-          />
+          <LetterForm onSubmit={handleUpdateLetter} submitButtonText="Update Letter" />
         </div>
       </div>
     );
@@ -401,12 +395,7 @@ const LetterToOtherFormation = ({ fileNumber }) => {
               Add New Letter
             </h2>
           </div>
-          <LetterForm 
-            onSubmit={handleAddLetter} 
-            submitButtonText="Add Letter" 
-            formData={formData}
-            handleChange={handleChange}
-          />
+          <LetterForm onSubmit={handleAddLetter} submitButtonText="Add Letter" />
         </div>
       </div>
     );
@@ -430,7 +419,7 @@ const LetterToOtherFormation = ({ fileNumber }) => {
         </CustomButton>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {letters.map((letter) => (
           <div
             key={letter.id}
@@ -487,4 +476,4 @@ const LetterToOtherFormation = ({ fileNumber }) => {
   );
 };
 
-export default LetterToOtherFormation; 
+export default LetterToOtherFormation;

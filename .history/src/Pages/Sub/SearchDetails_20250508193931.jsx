@@ -90,31 +90,30 @@ const SearchForm = ({ onSubmit, submitButtonText, formData, handleChange, handle
         />
       </div>
 
-      {/* Officers Section - Redesigned */}
-      <div className="border border-gray-200 rounded-lg overflow-hidden">
-        <div className="flex justify-between items-center p-4 bg-gray-50 border-b border-gray-200">
+      {/* Officers Section */}
+      <div>
+        <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold text-gray-900">Officers</h3>
           <button
             type="button"
             onClick={addOfficer}
-            className="p-1.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors"
-            title="Add Officer"
+            className="text-blue-600 hover:text-blue-800 flex items-center gap-1 text-sm"
           >
-            <Plus size={18} />
+            <Plus size={16} />
+            Add Officer
           </button>
         </div>
 
-        <div className="divide-y divide-gray-100">
+        <div className="space-y-4">
           {formData.officers.map((officer, index) => (
-            <div key={index} className="p-4 relative">
+            <div key={index} className="p-4 bg-gray-50 rounded-lg relative">
               {index > 0 && (
                 <button
                   type="button"
                   onClick={() => removeOfficer(index)}
-                  className="absolute top-4 right-4 text-gray-400 hover:text-red-500"
-                  title="Remove Officer"
+                  className="absolute top-2 right-2 text-gray-500 hover:text-red-600"
                 >
-                  <X size={18} />
+                  <X size={20} />
                 </button>
               )}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -146,12 +145,6 @@ const SearchForm = ({ onSubmit, submitButtonText, formData, handleChange, handle
             </div>
           ))}
         </div>
-        
-        {formData.officers.length === 0 && (
-          <div className="p-4 text-center text-gray-500">
-            No officers added yet. Click the + button to add an officer.
-          </div>
-        )}
       </div>
 
       <div className="flex justify-end">
@@ -185,19 +178,6 @@ const SearchDetails = ({ fileNumber }) => {
     din_on_authorization: "",
     outcome_of_search: "",
   });
-
-  // Create a resetForm function to reset form data to initial state
-  const resetFormData = () => {
-    setFormData({
-      officers: [{ name: "", designation: "", phone_number: "" }],
-      address_of_search: "",
-      date_of_authorization: "",
-      validity: "",
-      authorization_issued_by: "",
-      din_on_authorization: "",
-      outcome_of_search: "",
-    });
-  };
 
   useEffect(() => {
     if (fileNumber) {
@@ -281,7 +261,6 @@ const SearchDetails = ({ fileNumber }) => {
       setIsEditing(false);
       handleViewSearch(selectedSearch.id);
       fetchSearches();
-      resetFormData(); // Reset form data after update
       toast.success("Search updated successfully");
     } catch (error) {
       console.error("Error updating search:", error);
@@ -411,10 +390,7 @@ const SearchDetails = ({ fileNumber }) => {
       <div className="max-w-4xl mx-auto p-4">
         <div className="mb-4">
           <button
-            onClick={() => {
-              setIsEditing(false);
-              resetFormData(); // Reset form data when canceling edit
-            }}
+            onClick={() => setIsEditing(false)}
             className="flex items-center text-gray-600 hover:text-blue-600"
           >
             <ArrowLeft size={20} className="mr-2" />
@@ -570,10 +546,7 @@ const SearchDetails = ({ fileNumber }) => {
       <div className="max-w-4xl mx-auto p-4">
         <div className="mb-4">
           <button
-            onClick={() => {
-              setShowAddForm(false);
-              resetFormData(); // Reset form data when canceling add
-            }}
+            onClick={() => setShowAddForm(false)}
             className="flex items-center text-gray-600 hover:text-blue-600"
           >
             <ArrowLeft size={20} className="mr-2" />
@@ -609,13 +582,10 @@ const SearchDetails = ({ fileNumber }) => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Searches</h1>
         <CustomButton
-          onClick={() => {
-            resetFormData(); // Reset form data before showing add form
-            setShowAddForm(true);
-          }}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition-colors flex items-center gap-2"
+          onClick={() => setShowAddForm(true)}
+          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md font-medium transition-colors flex items-center gap-2 text-sm"
         >
-          <Plus size={20} />
+          <Plus size={16} />
           Add New Search
         </CustomButton>
       </div>

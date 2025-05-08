@@ -6,8 +6,8 @@ import InputBox from "../../Utils/UI/InputBox";
 import CustomButton from "../../Utils/UI/CustomButton";
 import { toast } from "react-toastify";
 
-// Move SummonsForm outside of SummonsDetails component
-const SummonsForm = ({ onSubmit, submitButtonText, formData, handleChange }) => (
+// Create the form component outside the main component
+const SummonsForm = ({ formData, handleChange, onSubmit, submitButtonText }) => (
   <form onSubmit={onSubmit} className="p-4">
     <div className="space-y-6">
       {/* Personal Information */}
@@ -146,6 +146,32 @@ const SummonsForm = ({ onSubmit, submitButtonText, formData, handleChange }) => 
   </form>
 );
 
+// Delete confirmation modal component
+const DeleteConfirmationModal = ({ onCancel, onConfirm }) => (
+  <div className="fixed inset-0 bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
+    <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl">
+      <h3 className="text-lg font-semibold mb-4">Confirm Deletion</h3>
+      <p className="mb-6">
+        Are you sure you want to delete this summons record? This action cannot be undone.
+      </p>
+      <div className="flex justify-end space-x-4">
+        <button
+          onClick={onCancel}
+          className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={onConfirm}
+          className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
 const SummonsDetails = ({ fileNumber }) => {
   const navigate = useNavigate();
   const [summonsList, setSummonsList] = useState([]);
@@ -168,22 +194,6 @@ const SummonsDetails = ({ fileNumber }) => {
     appeared: false,
     statement_recorded_date: "",
   });
-
-  // Create a resetForm function to reset form data to initial state
-  const resetFormData = () => {
-    setFormData({
-      identification_document: "",
-      document_number: "",
-      name_of_person: "",
-      role_of_person_in_case: "",
-      din_number: "",
-      date_of_issuing: "",
-      issued_by: "",
-      summons_for_date: "",
-      appeared: false,
-      statement_recorded_date: "",
-    });
-  };
 
   useEffect(() => {
     if (fileNumber) {
@@ -215,7 +225,18 @@ const SummonsDetails = ({ fileNumber }) => {
         investigation: fileNumber,
       });
       setShowAddForm(false);
-      resetFormData(); // Reset form data after successful add
+      setFormData({
+        identification_document: "",
+        document_number: "",
+        name_of_person: "",
+        role_of_person_in_case: "",
+        din_number: "",
+        date_of_issuing: "",
+        issued_by: "",
+        summons_for_date: "",
+        appeared: false,
+        statement_recorded_date: "",
+      });
       fetchSummonsList();
       toast.success("Summons added successfully");
     } catch (error) {
@@ -262,7 +283,6 @@ const SummonsDetails = ({ fileNumber }) => {
       setIsEditing(false);
       handleViewSummons(selectedSummons.id);
       fetchSummonsList();
-      resetFormData(); // Reset form data after successful update
       toast.success("Summons updated successfully");
     } catch (error) {
       console.error("Error updating summons:", error);
@@ -333,41 +353,12 @@ const SummonsDetails = ({ fileNumber }) => {
     );
   }
 
-  // Delete confirmation modal
-  const DeleteConfirmationModal = () => (
-    <div className="fixed inset-0 bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl">
-        <h3 className="text-lg font-semibold mb-4">Confirm Deletion</h3>
-        <p className="mb-6">
-          Are you sure you want to delete this summons record? This action cannot be undone.
-        </p>
-        <div className="flex justify-end space-x-4">
-          <button
-            onClick={() => setShowDeleteConfirm(false)}
-            className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleDeleteSummons}
-            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-          >
-            Delete
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-
   if (selectedSummons && isEditing) {
     return (
       <div className="max-w-4xl mx-auto p-4">
         <div className="mb-4">
           <button
-            onClick={() => {
-              setIsEditing(false);
-              resetFormData(); // Reset form data when canceling edit
-            }}
+            onClick={() => setIsEditing(false)}
             className="flex items-center text-gray-600 hover:text-blue-600"
           >
             <ArrowLeft size={20} className="mr-2" />
@@ -383,10 +374,10 @@ const SummonsDetails = ({ fileNumber }) => {
             </h2>
           </div>
           <SummonsForm 
+            formData={formData} 
+            handleChange={handleChange} 
             onSubmit={handleUpdateSummons} 
             submitButtonText="Update Summons" 
-            formData={formData}
-            handleChange={handleChange}
           />
         </div>
       </div>
@@ -489,7 +480,7 @@ const SummonsDetails = ({ fileNumber }) => {
                 </div>
               </div>
               <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                <Check className={`size-18 ${selectedSummons.appeared ? "text-green-500" : "text-gray-400"}`} />
+                <Check className={`${selectedSummons.appeared ? "text-green-500" : "text-gray-400"}`} size={18} />
                 <div>
                   <p className="text-sm text-gray-600">Appeared</p>
                   <p className="font-medium">{selectedSummons.appeared ? "Yes" : "No"}</p>
@@ -529,10 +520,7 @@ const SummonsDetails = ({ fileNumber }) => {
       <div className="max-w-4xl mx-auto p-4">
         <div className="mb-4">
           <button
-            onClick={() => {
-              setShowAddForm(false);
-              resetFormData(); // Reset form data when canceling add
-            }}
+            onClick={() => setShowAddForm(false)}
             className="flex items-center text-gray-600 hover:text-blue-600"
           >
             <ArrowLeft size={20} className="mr-2" />
@@ -548,10 +536,10 @@ const SummonsDetails = ({ fileNumber }) => {
             </h2>
           </div>
           <SummonsForm 
+            formData={formData} 
+            handleChange={handleChange} 
             onSubmit={handleAddSummons} 
-            submitButtonText="Add Summons"
-            formData={formData}
-            handleChange={handleChange}
+            submitButtonText="Add Summons" 
           />
         </div>
       </div>
@@ -560,15 +548,17 @@ const SummonsDetails = ({ fileNumber }) => {
 
   return (
     <div className="max-w-7xl mx-auto p-4">
-      {showDeleteConfirm && <DeleteConfirmationModal />}
+      {showDeleteConfirm && (
+        <DeleteConfirmationModal 
+          onCancel={() => setShowDeleteConfirm(false)} 
+          onConfirm={handleDeleteSummons} 
+        />
+      )}
       
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Summons</h1>
         <CustomButton
-          onClick={() => {
-            resetFormData(); // Reset form data before showing add form
-            setShowAddForm(true);
-          }}
+          onClick={() => setShowAddForm(true)}
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition-colors flex items-center gap-2"
         >
           <Plus size={20} />

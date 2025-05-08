@@ -1,150 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AxiosWrapper } from "../../Utils/Auth/AxiosWrapper";
-import { Plus, ArrowLeft, FileText, Calendar, User, Hash, Award, Check, Edit, Trash2, X, FileCheck } from "lucide-react";
+import { Plus, ArrowLeft, FileText, Calendar, User, HashIcon, Award, Check, Edit, Trash2, X, FileCheck } from "lucide-react";
 import InputBox from "../../Utils/UI/InputBox";
 import CustomButton from "../../Utils/UI/CustomButton";
 import { toast } from "react-toastify";
-
-// Move SummonsForm outside of SummonsDetails component
-const SummonsForm = ({ onSubmit, submitButtonText, formData, handleChange }) => (
-  <form onSubmit={onSubmit} className="p-4">
-    <div className="space-y-6">
-      {/* Personal Information */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <InputBox
-          name="name_of_person"
-          label="Name of Person"
-          type="text"
-          value={formData.name_of_person}
-          onChange={handleChange}
-          required
-          maxLength={255}
-        />
-        <InputBox
-          name="role_of_person_in_case"
-          label="Role of Person in Case"
-          type="text"
-          value={formData.role_of_person_in_case}
-          onChange={handleChange}
-          required
-          maxLength={100}
-        />
-      </div>
-
-      {/* ID Document Information */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <InputBox
-          name="identification_document"
-          label="Identification Document Type (PAN, Aadhar, etc.)"
-          type="text"
-          value={formData.identification_document}
-          onChange={handleChange}
-          required
-          maxLength={100}
-        />
-        <InputBox
-          name="document_number"
-          label="Document Number"
-          type="text"
-          value={formData.document_number}
-          onChange={handleChange}
-          required
-          maxLength={100}
-        />
-      </div>
-
-      {/* Summons Information */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <InputBox
-          name="din_number"
-          label="DIN Number"
-          type="text"
-          value={formData.din_number}
-          onChange={handleChange}
-          required
-          maxLength={100}
-        />
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Date of Issuing <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="date"
-            name="date_of_issuing"
-            value={formData.date_of_issuing}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 date-picker"
-            onFocus={(e) => e.target.showPicker()}
-            required
-          />
-        </div>
-        <InputBox
-          name="issued_by"
-          label="Issued By"
-          type="text"
-          value={formData.issued_by}
-          onChange={handleChange}
-          required
-          maxLength={255}
-        />
-      </div>
-
-      {/* Summons Date and Appearance */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Summons For Date <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="date"
-            name="summons_for_date"
-            value={formData.summons_for_date}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 date-picker"
-            onFocus={(e) => e.target.showPicker()}
-            required
-          />
-        </div>
-        <div className="flex items-center mt-7">
-          <input
-            type="checkbox"
-            id="appeared"
-            name="appeared"
-            checked={formData.appeared}
-            onChange={handleChange}
-            className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-          />
-          <label htmlFor="appeared" className="ml-2 block text-sm text-gray-900">
-            Person Appeared
-          </label>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Statement Recorded Date
-          </label>
-          <input
-            type="date"
-            name="statement_recorded_date"
-            value={formData.statement_recorded_date}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 date-picker"
-            onFocus={(e) => e.target.showPicker()}
-          />
-        </div>
-      </div>
-
-      <div className="flex justify-end">
-        <CustomButton
-          type="submit"
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium transition-colors"
-        >
-          {submitButtonText}
-        </CustomButton>
-      </div>
-    </div>
-  </form>
-);
 
 const SummonsDetails = ({ fileNumber }) => {
   const navigate = useNavigate();
@@ -168,22 +28,6 @@ const SummonsDetails = ({ fileNumber }) => {
     appeared: false,
     statement_recorded_date: "",
   });
-
-  // Create a resetForm function to reset form data to initial state
-  const resetFormData = () => {
-    setFormData({
-      identification_document: "",
-      document_number: "",
-      name_of_person: "",
-      role_of_person_in_case: "",
-      din_number: "",
-      date_of_issuing: "",
-      issued_by: "",
-      summons_for_date: "",
-      appeared: false,
-      statement_recorded_date: "",
-    });
-  };
 
   useEffect(() => {
     if (fileNumber) {
@@ -215,7 +59,18 @@ const SummonsDetails = ({ fileNumber }) => {
         investigation: fileNumber,
       });
       setShowAddForm(false);
-      resetFormData(); // Reset form data after successful add
+      setFormData({
+        identification_document: "",
+        document_number: "",
+        name_of_person: "",
+        role_of_person_in_case: "",
+        din_number: "",
+        date_of_issuing: "",
+        issued_by: "",
+        summons_for_date: "",
+        appeared: false,
+        statement_recorded_date: "",
+      });
       fetchSummonsList();
       toast.success("Summons added successfully");
     } catch (error) {
@@ -262,7 +117,6 @@ const SummonsDetails = ({ fileNumber }) => {
       setIsEditing(false);
       handleViewSummons(selectedSummons.id);
       fetchSummonsList();
-      resetFormData(); // Reset form data after successful update
       toast.success("Summons updated successfully");
     } catch (error) {
       console.error("Error updating summons:", error);
@@ -359,15 +213,151 @@ const SummonsDetails = ({ fileNumber }) => {
     </div>
   );
 
+  const SummonsForm = ({ onSubmit, submitButtonText }) => (
+    <form onSubmit={onSubmit} className="p-4">
+      <div className="space-y-6">
+        {/* Personal Information */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <InputBox
+            name="name_of_person"
+            label="Name of Person"
+            type="text"
+            value={formData.name_of_person}
+            onChange={handleChange}
+            required
+            maxLength={255}
+          />
+          <InputBox
+            name="role_of_person_in_case"
+            label="Role of Person in Case"
+            type="text"
+            value={formData.role_of_person_in_case}
+            onChange={handleChange}
+            required
+            maxLength={100}
+          />
+        </div>
+
+        {/* ID Document Information */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <InputBox
+            name="identification_document"
+            label="Identification Document Type (PAN, Aadhar, etc.)"
+            type="text"
+            value={formData.identification_document}
+            onChange={handleChange}
+            required
+            maxLength={100}
+          />
+          <InputBox
+            name="document_number"
+            label="Document Number"
+            type="text"
+            value={formData.document_number}
+            onChange={handleChange}
+            required
+            maxLength={100}
+          />
+        </div>
+
+        {/* Summons Information */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <InputBox
+            name="din_number"
+            label="DIN Number"
+            type="text"
+            value={formData.din_number}
+            onChange={handleChange}
+            required
+            maxLength={100}
+          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Date of Issuing <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="date"
+              name="date_of_issuing"
+              value={formData.date_of_issuing}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 date-picker"
+              onFocus={(e) => e.target.showPicker()}
+              required
+            />
+          </div>
+          <InputBox
+            name="issued_by"
+            label="Issued By"
+            type="text"
+            value={formData.issued_by}
+            onChange={handleChange}
+            required
+            maxLength={255}
+          />
+        </div>
+
+        {/* Summons Date and Appearance */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Summons For Date <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="date"
+              name="summons_for_date"
+              value={formData.summons_for_date}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 date-picker"
+              onFocus={(e) => e.target.showPicker()}
+              required
+            />
+          </div>
+          <div className="flex items-center mt-7">
+            <input
+              type="checkbox"
+              id="appeared"
+              name="appeared"
+              checked={formData.appeared}
+              onChange={handleChange}
+              className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <label htmlFor="appeared" className="ml-2 block text-sm text-gray-900">
+              Person Appeared
+            </label>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Statement Recorded Date
+            </label>
+            <input
+              type="date"
+              name="statement_recorded_date"
+              value={formData.statement_recorded_date}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 date-picker"
+              onFocus={(e) => e.target.showPicker()}
+            />
+          </div>
+        </div>
+
+        <div className="flex justify-end">
+          <CustomButton
+            type="submit"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium transition-colors"
+          >
+            {submitButtonText}
+          </CustomButton>
+        </div>
+      </div>
+    </form>
+  );
+
   if (selectedSummons && isEditing) {
     return (
       <div className="max-w-4xl mx-auto p-4">
         <div className="mb-4">
           <button
-            onClick={() => {
-              setIsEditing(false);
-              resetFormData(); // Reset form data when canceling edit
-            }}
+            onClick={() => setIsEditing(false)}
             className="flex items-center text-gray-600 hover:text-blue-600"
           >
             <ArrowLeft size={20} className="mr-2" />
@@ -382,12 +372,7 @@ const SummonsDetails = ({ fileNumber }) => {
               Edit Summons
             </h2>
           </div>
-          <SummonsForm 
-            onSubmit={handleUpdateSummons} 
-            submitButtonText="Update Summons" 
-            formData={formData}
-            handleChange={handleChange}
-          />
+          <SummonsForm onSubmit={handleUpdateSummons} submitButtonText="Update Summons" />
         </div>
       </div>
     );
@@ -529,10 +514,7 @@ const SummonsDetails = ({ fileNumber }) => {
       <div className="max-w-4xl mx-auto p-4">
         <div className="mb-4">
           <button
-            onClick={() => {
-              setShowAddForm(false);
-              resetFormData(); // Reset form data when canceling add
-            }}
+            onClick={() => setShowAddForm(false)}
             className="flex items-center text-gray-600 hover:text-blue-600"
           >
             <ArrowLeft size={20} className="mr-2" />
@@ -547,12 +529,7 @@ const SummonsDetails = ({ fileNumber }) => {
               Add New Summons
             </h2>
           </div>
-          <SummonsForm 
-            onSubmit={handleAddSummons} 
-            submitButtonText="Add Summons"
-            formData={formData}
-            handleChange={handleChange}
-          />
+          <SummonsForm onSubmit={handleAddSummons} submitButtonText="Add Summons" />
         </div>
       </div>
     );
@@ -565,10 +542,7 @@ const SummonsDetails = ({ fileNumber }) => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Summons</h1>
         <CustomButton
-          onClick={() => {
-            resetFormData(); // Reset form data before showing add form
-            setShowAddForm(true);
-          }}
+          onClick={() => setShowAddForm(true)}
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition-colors flex items-center gap-2"
         >
           <Plus size={20} />

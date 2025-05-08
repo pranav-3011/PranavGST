@@ -186,19 +186,6 @@ const SearchDetails = ({ fileNumber }) => {
     outcome_of_search: "",
   });
 
-  // Create a resetForm function to reset form data to initial state
-  const resetFormData = () => {
-    setFormData({
-      officers: [{ name: "", designation: "", phone_number: "" }],
-      address_of_search: "",
-      date_of_authorization: "",
-      validity: "",
-      authorization_issued_by: "",
-      din_on_authorization: "",
-      outcome_of_search: "",
-    });
-  };
-
   useEffect(() => {
     if (fileNumber) {
       fetchSearches();
@@ -281,7 +268,6 @@ const SearchDetails = ({ fileNumber }) => {
       setIsEditing(false);
       handleViewSearch(selectedSearch.id);
       fetchSearches();
-      resetFormData(); // Reset form data after update
       toast.success("Search updated successfully");
     } catch (error) {
       console.error("Error updating search:", error);
@@ -411,10 +397,7 @@ const SearchDetails = ({ fileNumber }) => {
       <div className="max-w-4xl mx-auto p-4">
         <div className="mb-4">
           <button
-            onClick={() => {
-              setIsEditing(false);
-              resetFormData(); // Reset form data when canceling edit
-            }}
+            onClick={() => setIsEditing(false)}
             className="flex items-center text-gray-600 hover:text-blue-600"
           >
             <ArrowLeft size={20} className="mr-2" />
@@ -570,10 +553,7 @@ const SearchDetails = ({ fileNumber }) => {
       <div className="max-w-4xl mx-auto p-4">
         <div className="mb-4">
           <button
-            onClick={() => {
-              setShowAddForm(false);
-              resetFormData(); // Reset form data when canceling add
-            }}
+            onClick={() => setShowAddForm(false)}
             className="flex items-center text-gray-600 hover:text-blue-600"
           >
             <ArrowLeft size={20} className="mr-2" />
@@ -609,10 +589,7 @@ const SearchDetails = ({ fileNumber }) => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Searches</h1>
         <CustomButton
-          onClick={() => {
-            resetFormData(); // Reset form data before showing add form
-            setShowAddForm(true);
-          }}
+          onClick={() => setShowAddForm(true)}
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition-colors flex items-center gap-2"
         >
           <Plus size={20} />
