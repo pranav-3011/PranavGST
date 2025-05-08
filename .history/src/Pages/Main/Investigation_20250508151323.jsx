@@ -116,7 +116,7 @@ const Investigation = () => {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="mb-6">
+      {/* <div className="mb-6">
         <nav className="flex space-x-4" aria-label="Tabs">
           <button
             type="button"
@@ -140,7 +140,7 @@ const Investigation = () => {
             Taxpayer Details
           </button>
         </nav>
-      </div>
+      </div> */}
 
       <form onSubmit={handleFormSubmit}>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -320,7 +320,7 @@ const Investigation = () => {
                   name="gstin"
                   label="GSTIN"
                   type="text"
-                 // placeholder="Enter GSTIN"
+                  placeholder="Enter GSTIN"
                   value={taxpayerData.gstin}
                   onChange={handleTaxpayerChange}
                   required
@@ -334,26 +334,6 @@ const Investigation = () => {
                   value={taxpayerData.name}
                   onChange={handleTaxpayerChange}
                   required
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <InputBox
-                  name="email"
-                  label="Email"
-                  type="email"
-                  // placeholder="Enter email"
-                  value={taxpayerData.email}
-                  onChange={handleTaxpayerChange}
-                />
-
-                <InputBox
-                  name="phone_number"
-                  label="Phone Number"
-                  type="tel"
-                  // placeholder="Enter phone number"
-                  value={taxpayerData.phone_number}
-                  onChange={handleTaxpayerChange}
                 />
               </div>
 

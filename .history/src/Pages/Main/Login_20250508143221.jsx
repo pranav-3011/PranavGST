@@ -16,7 +16,7 @@ const Login = () => {
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/auth/login/`, {
+      const response = await fetch('http://uatgst.cppbharat.com/api/auth/login/', {
         method: 'POST',
         headers: {
           'accept': 'application/json',

@@ -337,26 +337,6 @@ const Investigation = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <InputBox
-                  name="email"
-                  label="Email"
-                  type="email"
-                  // placeholder="Enter email"
-                  value={taxpayerData.email}
-                  onChange={handleTaxpayerChange}
-                />
-
-                <InputBox
-                  name="phone_number"
-                  label="Phone Number"
-                  type="tel"
-                  // placeholder="Enter phone number"
-                  value={taxpayerData.phone_number}
-                  onChange={handleTaxpayerChange}
-                />
-              </div>
-
               <InputBox
                 name="trade_name"
                 label="Trade Name"
