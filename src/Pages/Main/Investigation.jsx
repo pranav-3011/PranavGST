@@ -9,28 +9,46 @@ const Investigation = () => {
     formData,
     taxpayerData,
     jurisdictionData,
-    sourceOptions,
-    divisionOptions,
-    rangeOptions,
-    isLoading,
-    error,
     handleChange,
     handleDateChange,
     handleTaxpayerChange,
     handleJurisdictionChange,
-    handleDivisionChange,
     handleSubmit,
-    postInvestigation,
-    fetchOptions
   } = useForm();
 
+  // State for dropdown options
+  const [sourceOptions, setSourceOptions] = useState([]);
+  const [divisionOptions, setDivisionOptions] = useState([]);
+  const [rangeOptions, setRangeOptions] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  // Fetch options when component mounts
+  // Fetch source and division options when component mounts
   useEffect(() => {
-    fetchOptions();
+    setSourceOptions([
+      { value: "1", label: "Intelligence" },
+      { value: "2", label: "CIU" },
+      { value: "3", label: "DGARM" },
+      { value: "4", label: "Informant/Complaint" },
+      { value: "5", label: "Reference from other Commissionerate" },
+    ]);
+
+    setDivisionOptions([
+      { value: "1", label: "1" },
+      { value: "2", label: "2" },
+      { value: "3", label: "3" },
+      { value: "4", label: "4" },
+      { value: "5", label: "5" },
+    ]);
+
+    setRangeOptions([
+      { value: "1", label: "1" },
+      { value: "2", label: "2" },
+      { value: "3", label: "3" },
+      { value: "4", label: "4" },
+      { value: "5", label: "5" },
+    ]);
   }, []);
 
   const handleFormSubmit = async (e) => {
@@ -40,7 +58,8 @@ const Investigation = () => {
     setSubmitSuccess(false);
 
     try {
-      await postInvestigation();
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
       setSubmitSuccess(true);
     } catch (error) {
       setSubmitError(error.message || 'Failed to submit investigation');
@@ -48,14 +67,6 @@ const Investigation = () => {
       setIsSubmitting(false);
     }
   };
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <div className="text-gray-600">Loading form options...</div>
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-full mx-auto p-2">
@@ -65,21 +76,15 @@ const Investigation = () => {
         </h1>
       </div>
 
-      {error && (
+      {submitError && (
         <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-          {error}
+          {submitError}
         </div>
       )}
 
       {submitSuccess && (
         <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
           Investigation submitted successfully!
-        </div>
-      )}
-
-      {submitError && (
-        <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-          {submitError}
         </div>
       )}
 
@@ -190,7 +195,7 @@ const Investigation = () => {
                     values={divisionOptions}
                     placeholder="Select division"
                     value={jurisdictionData.division_name}
-                    onChange={handleDivisionChange}
+                    onChange={handleJurisdictionChange}
                     className="w-full"
                   />
                 </div>
@@ -206,7 +211,6 @@ const Investigation = () => {
                     value={jurisdictionData.range_name}
                     onChange={handleJurisdictionChange}
                     className="w-full"
-                    disabled={!jurisdictionData.division_name}
                   />
                 </div>
               </div>

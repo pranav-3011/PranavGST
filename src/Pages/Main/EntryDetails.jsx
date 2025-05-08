@@ -11,6 +11,8 @@ const EntryDetails = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Commented out API call for now
+    /*
     const fetchInvestigations = async () => {
       try {
         const data = await AxiosWrapper('get', 'investigation/investigations/');
@@ -24,6 +26,44 @@ const EntryDetails = () => {
     };
 
     fetchInvestigations();
+    */
+
+    // Static data for testing
+    const staticData = [{
+      id: 2,
+      taxpayers: [
+        {
+          id: 2,
+          division_name: "D1",
+          range_name: "RD1",
+          added_on: "2025-05-07T22:58:18.752024+05:30",
+          updated_on: "2025-05-07T22:58:18.752037+05:30",
+          gstin: "dzcx",
+          name: "svdc",
+          trade_name: "dsv",
+          email: "",
+          phone_number: "",
+          address: "vscvfccv",
+          division: 1,
+          range: 1
+        }
+      ],
+      source_name: "DGARM",
+      added_by: "admin",
+      updated_by: "admin",
+      currently_assigned_officer: "admin",
+      added_on: "2025-05-07T22:58:18.743794+05:30",
+      updated_on: "2025-05-07T22:58:18.743811+05:30",
+      file_number: "dvz",
+      e_office_file_no: "dvc",
+      date_of_detection: "2025-05-08",
+      nature_of_offence: "dzv",
+      period_involved: "2025-05-08",
+      source: 3
+    }];
+
+    setInvestigations(staticData);
+    setIsLoading(false);
   }, []);
 
   const columns = [
