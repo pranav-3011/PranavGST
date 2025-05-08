@@ -29,8 +29,6 @@ export const FormProvider = ({ children }) => {
     gstin: "",
     name: "",
     trade_name: "",
-    email: "",
-    phone_number: "",
     address: "",
   });
 
