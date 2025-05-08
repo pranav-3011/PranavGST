@@ -62,33 +62,26 @@ const InvestigationDetails = () => {
     { name: 'Search Details', component: SearchDetails },
     { name: 'Seizure Details', component: SeizureDetails },
     { name: 'Letter To Other Formation', component: LetterToOtherFormation },
-    { name: 'ITC Block Unblock Details', component: ITCBlockUnblockDetails },
-    { name: 'DRC Details', component: DrcDetails },
-    { name: 'Quantification Details', component: QuantificationDetails },
-
-
-
-    { name: 'Recovery Details', component: RecoveryDetails },
-    // { name: 'Investigation Register', component: InvestigationRegister },
+    { name: 'Investigation Register', component: InvestigationRegister },
     // { name: 'Source', component: Source },
     { name: 'Taxpayer Details', component: TaxpayerDetails },
     // { name: 'Division', component: Division },
     // { name: 'Range', component: Range },
-    // { name: 'Contact Person', component: ContactPerson },
+    { name: 'Contact Person', component: ContactPerson },
     
-    // { name: 'Office Conducted Inspection', component: OfficeConductedInspection },
+    { name: 'Office Conducted Inspection', component: OfficeConductedInspection },
     
-    // { name: 'Office Conducted Search', component: OfficeConductedSearch },
+    { name: 'Office Conducted Search', component: OfficeConductedSearch },
+    { name: 'DRC Details', component: DrcDetails },
     
-    
-    
-    // { name: 'Statement Details', component: SatementDetails },
-    
+    { name: 'Recovery Details', component: RecoveryDetails },
+    { name: 'Statement Details', component: SatementDetails },
+    { name: 'Quantification Details', component: QuantificationDetails },
     { name: 'Advisory Details', component: AdvisoryDetails },
     { name: 'SCN Details', component: SCNDetails },
+    { name: 'ITC Block Unblock Details', component: ITCBlockUnblockDetails },
     
-    
-    // { name: 'Noticee Details', component: NoticeeDetails },
+    { name: 'Noticee Details', component: NoticeeDetails },
     { name: 'Involved Person', component: InvolvedPerson },
   ];
 

@@ -521,8 +521,8 @@ const ITCBlockUnblockDetails = ({ fileNumber }) => {
             
             <div onClick={() => handleViewAction(action.id)} className="h-full">
               <div className="flex items-center gap-3 mb-3">
-                <div className={`p-2 ${action.action_taken === "block" ? "bg-red-100" : "bg-green-100"} rounded-lg`}>
-                  {action.action_taken === "block" ? (
+                <div className={`p-2 ${action.action_taken === "BLOCK" ? "bg-red-100" : "bg-green-100"} rounded-lg`}>
+                  {action.action_taken === "BLOCK" ? (
                     <XCircle className={`text-red-600`} size={20} />
                   ) : (
                     <CheckCircle className={`text-green-600`} size={20} />
@@ -531,7 +531,7 @@ const ITCBlockUnblockDetails = ({ fileNumber }) => {
                 <div>
                   <p className="text-sm text-gray-600">ITC Action #{action.id}</p>
                   <p className="font-medium">
-                    {action.action_taken === "block" ? "Block" : "Unblock"}
+                    {action.action_taken === "BLOCK" ? "Block" : "Unblock"}
                   </p>
                 </div>
               </div>
