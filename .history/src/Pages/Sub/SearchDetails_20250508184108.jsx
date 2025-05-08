@@ -235,7 +235,7 @@ const SearchDetails = ({ fileNumber }) => {
   const SearchForm = ({ onSubmit, submitButtonText }) => (
     <form onSubmit={onSubmit} className="p-4">
       <div className="space-y-6">
-        {/* Address and Authorization Issued By */}
+        {/* Address and Dates Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <InputBox
             name="address_of_search"
@@ -257,7 +257,6 @@ const SearchDetails = ({ fileNumber }) => {
           />
         </div>
 
-        {/* Dates and DIN */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">

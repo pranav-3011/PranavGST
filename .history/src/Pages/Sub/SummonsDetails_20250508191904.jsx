@@ -1,176 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AxiosWrapper } from "../../Utils/Auth/AxiosWrapper";
-import { Plus, ArrowLeft, FileText, Calendar, User, Hash, Award, Check, Edit, Trash2, X, FileCheck } from "lucide-react";
+import { Plus, ArrowLeft, FileText, Calendar, User, HashIcon, Award, Check, Edit, Trash2, X, FileCheck } from "lucide-react";
 import InputBox from "../../Utils/UI/InputBox";
 import CustomButton from "../../Utils/UI/CustomButton";
 import { toast } from "react-toastify";
-
-// Create the form component outside the main component
-const SummonsForm = ({ formData, handleChange, onSubmit, submitButtonText }) => (
-  <form onSubmit={onSubmit} className="p-4">
-    <div className="space-y-6">
-      {/* Personal Information */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <InputBox
-          name="name_of_person"
-          label="Name of Person"
-          type="text"
-          value={formData.name_of_person}
-          onChange={handleChange}
-          required
-          maxLength={255}
-        />
-        <InputBox
-          name="role_of_person_in_case"
-          label="Role of Person in Case"
-          type="text"
-          value={formData.role_of_person_in_case}
-          onChange={handleChange}
-          required
-          maxLength={100}
-        />
-      </div>
-
-      {/* ID Document Information */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <InputBox
-          name="identification_document"
-          label="Identification Document Type (PAN, Aadhar, etc.)"
-          type="text"
-          value={formData.identification_document}
-          onChange={handleChange}
-          required
-          maxLength={100}
-        />
-        <InputBox
-          name="document_number"
-          label="Document Number"
-          type="text"
-          value={formData.document_number}
-          onChange={handleChange}
-          required
-          maxLength={100}
-        />
-      </div>
-
-      {/* Summons Information */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <InputBox
-          name="din_number"
-          label="DIN Number"
-          type="text"
-          value={formData.din_number}
-          onChange={handleChange}
-          required
-          maxLength={100}
-        />
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Date of Issuing <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="date"
-            name="date_of_issuing"
-            value={formData.date_of_issuing}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 date-picker"
-            onFocus={(e) => e.target.showPicker()}
-            required
-          />
-        </div>
-        <InputBox
-          name="issued_by"
-          label="Issued By"
-          type="text"
-          value={formData.issued_by}
-          onChange={handleChange}
-          required
-          maxLength={255}
-        />
-      </div>
-
-      {/* Summons Date and Appearance */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Summons For Date <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="date"
-            name="summons_for_date"
-            value={formData.summons_for_date}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 date-picker"
-            onFocus={(e) => e.target.showPicker()}
-            required
-          />
-        </div>
-        <div className="flex items-center mt-7">
-          <input
-            type="checkbox"
-            id="appeared"
-            name="appeared"
-            checked={formData.appeared}
-            onChange={handleChange}
-            className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-          />
-          <label htmlFor="appeared" className="ml-2 block text-sm text-gray-900">
-            Person Appeared
-          </label>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Statement Recorded Date
-          </label>
-          <input
-            type="date"
-            name="statement_recorded_date"
-            value={formData.statement_recorded_date}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 date-picker"
-            onFocus={(e) => e.target.showPicker()}
-          />
-        </div>
-      </div>
-
-      <div className="flex justify-end">
-        <CustomButton
-          type="submit"
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium transition-colors"
-        >
-          {submitButtonText}
-        </CustomButton>
-      </div>
-    </div>
-  </form>
-);
-
-// Delete confirmation modal component
-const DeleteConfirmationModal = ({ onCancel, onConfirm }) => (
-  <div className="fixed inset-0 bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
-    <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl">
-      <h3 className="text-lg font-semibold mb-4">Confirm Deletion</h3>
-      <p className="mb-6">
-        Are you sure you want to delete this summons record? This action cannot be undone.
-      </p>
-      <div className="flex justify-end space-x-4">
-        <button
-          onClick={onCancel}
-          className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100"
-        >
-          Cancel
-        </button>
-        <button
-          onClick={onConfirm}
-          className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-        >
-          Delete
-        </button>
-      </div>
-    </div>
-  </div>
-);
 
 const SummonsDetails = ({ fileNumber }) => {
   const navigate = useNavigate();
@@ -319,9 +153,11 @@ const SummonsDetails = ({ fileNumber }) => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    const newValue = type === "checkbox" ? checked : value;
+
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: newValue,
     }));
   };
 
@@ -353,6 +189,171 @@ const SummonsDetails = ({ fileNumber }) => {
     );
   }
 
+  // Delete confirmation modal
+  const DeleteConfirmationModal = () => (
+    <div className="fixed inset-0 bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl">
+        <h3 className="text-lg font-semibold mb-4">Confirm Deletion</h3>
+        <p className="mb-6">
+          Are you sure you want to delete this summons record? This action cannot be undone.
+        </p>
+        <div className="flex justify-end space-x-4">
+          <button
+            onClick={() => setShowDeleteConfirm(false)}
+            className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleDeleteSummons}
+            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const SummonsForm = ({ onSubmit, submitButtonText }) => (
+    <form onSubmit={onSubmit} className="p-4">
+      <div className="space-y-6">
+        {/* Personal Information */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <InputBox
+            name="name_of_person"
+            label="Name of Person"
+            type="text"
+            value={formData.name_of_person}
+            onChange={handleChange}
+            required
+            maxLength={255}
+          />
+          <InputBox
+            name="role_of_person_in_case"
+            label="Role of Person in Case"
+            type="text"
+            value={formData.role_of_person_in_case}
+            onChange={handleChange}
+            required
+            maxLength={100}
+          />
+        </div>
+
+        {/* ID Document Information */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <InputBox
+            name="identification_document"
+            label="Identification Document Type (PAN, Aadhar, etc.)"
+            type="text"
+            value={formData.identification_document}
+            onChange={handleChange}
+            required
+            maxLength={100}
+          />
+          <InputBox
+            name="document_number"
+            label="Document Number"
+            type="text"
+            value={formData.document_number}
+            onChange={handleChange}
+            required
+            maxLength={100}
+          />
+        </div>
+
+        {/* Summons Information */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <InputBox
+            name="din_number"
+            label="DIN Number"
+            type="text"
+            value={formData.din_number}
+            onChange={handleChange}
+            required
+            maxLength={100}
+          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Date of Issuing <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="date"
+              name="date_of_issuing"
+              value={formData.date_of_issuing}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 date-picker"
+              onFocus={(e) => e.target.showPicker()}
+              required
+            />
+          </div>
+          <InputBox
+            name="issued_by"
+            label="Issued By"
+            type="text"
+            value={formData.issued_by}
+            onChange={handleChange}
+            required
+            maxLength={255}
+          />
+        </div>
+
+        {/* Summons Date and Appearance */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Summons For Date <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="date"
+              name="summons_for_date"
+              value={formData.summons_for_date}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 date-picker"
+              onFocus={(e) => e.target.showPicker()}
+              required
+            />
+          </div>
+          <div className="flex items-center mt-7">
+            <input
+              type="checkbox"
+              id="appeared"
+              name="appeared"
+              checked={formData.appeared}
+              onChange={handleChange}
+              className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <label htmlFor="appeared" className="ml-2 block text-sm text-gray-900">
+              Person Appeared
+            </label>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Statement Recorded Date
+            </label>
+            <input
+              type="date"
+              name="statement_recorded_date"
+              value={formData.statement_recorded_date}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 date-picker"
+              onFocus={(e) => e.target.showPicker()}
+            />
+          </div>
+        </div>
+
+        <div className="flex justify-end">
+          <CustomButton
+            type="submit"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium transition-colors"
+          >
+            {submitButtonText}
+          </CustomButton>
+        </div>
+      </div>
+    </form>
+  );
+
   if (selectedSummons && isEditing) {
     return (
       <div className="max-w-4xl mx-auto p-4">
@@ -373,12 +374,7 @@ const SummonsDetails = ({ fileNumber }) => {
               Edit Summons
             </h2>
           </div>
-          <SummonsForm 
-            formData={formData} 
-            handleChange={handleChange} 
-            onSubmit={handleUpdateSummons} 
-            submitButtonText="Update Summons" 
-          />
+          <SummonsForm onSubmit={handleUpdateSummons} submitButtonText="Update Summons" />
         </div>
       </div>
     );
@@ -480,7 +476,7 @@ const SummonsDetails = ({ fileNumber }) => {
                 </div>
               </div>
               <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                <Check className={`${selectedSummons.appeared ? "text-green-500" : "text-gray-400"}`} size={18} />
+                <Check className={`size-18 ${selectedSummons.appeared ? "text-green-500" : "text-gray-400"}`} />
                 <div>
                   <p className="text-sm text-gray-600">Appeared</p>
                   <p className="font-medium">{selectedSummons.appeared ? "Yes" : "No"}</p>
@@ -535,12 +531,7 @@ const SummonsDetails = ({ fileNumber }) => {
               Add New Summons
             </h2>
           </div>
-          <SummonsForm 
-            formData={formData} 
-            handleChange={handleChange} 
-            onSubmit={handleAddSummons} 
-            submitButtonText="Add Summons" 
-          />
+          <SummonsForm onSubmit={handleAddSummons} submitButtonText="Add Summons" />
         </div>
       </div>
     );
@@ -548,12 +539,7 @@ const SummonsDetails = ({ fileNumber }) => {
 
   return (
     <div className="max-w-7xl mx-auto p-4">
-      {showDeleteConfirm && (
-        <DeleteConfirmationModal 
-          onCancel={() => setShowDeleteConfirm(false)} 
-          onConfirm={handleDeleteSummons} 
-        />
-      )}
+      {showDeleteConfirm && <DeleteConfirmationModal />}
       
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Summons</h1>

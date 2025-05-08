@@ -8,8 +8,8 @@ const InputBox = ({
   isDisabled = false,
   ...rest
 }) => {
-  // Allow text, email, number, and date
-  const inputType = ["email", "number", "date"].includes(type) ? type : "text";
+  // Only allow text, email, or number
+  const inputType = ["email", "number"].includes(type) ? type : "text";
 
   // Conditional classes for disabled state
   const disabledClasses = isDisabled
@@ -18,15 +18,6 @@ const InputBox = ({
 
   // Function to validate input
   const handleKeyDown = (e) => {
-    // Skip validation for date inputs
-    if (type === "date") {
-      // Call the original onKeyDown handler if it exists
-      if (rest.onKeyDown) {
-        rest.onKeyDown(e);
-      }
-      return;
-    }
-    
     // Regular expression to match allowed characters: alphabets, numbers, space and specified special characters
     const allowedPattern = /^[a-zA-Z0-9\s'",./\-_:;\\%#@!~&*()=+{}?]$/;
 

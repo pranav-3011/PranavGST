@@ -59,7 +59,6 @@ const InvestigationDetails = () => {
   const actionButtons = [
     { name: 'Summons Details', component: SummonsDetails },
     { name: 'Inspection Details', component: InspectionDetails },
-    { name: 'Search Details', component: SearchDetails },
     { name: 'Seizure Details', component: SeizureDetails },
     { name: 'Investigation Register', component: InvestigationRegister },
     { name: 'Source', component: Source },
@@ -67,7 +66,7 @@ const InvestigationDetails = () => {
     { name: 'Division', component: Division },
     { name: 'Range', component: Range },
     { name: 'Contact Person', component: ContactPerson },
-    
+    { name: 'Search Details', component: SearchDetails },
     { name: 'Office Conducted Inspection', component: OfficeConductedInspection },
     
     { name: 'Office Conducted Search', component: OfficeConductedSearch },

@@ -181,8 +181,8 @@ const SeizureDetails = ({ fileNumber }) => {
 
   // Delete confirmation modal
   const DeleteConfirmationModal = () => (
-    <div className="fixed inset-0  bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 max-w-md w-full">
         <h3 className="text-lg font-semibold mb-4">Confirm Deletion</h3>
         <p className="mb-6">
           Are you sure you want to delete this seizure record? This action cannot be undone.
@@ -321,6 +321,13 @@ const SeizureDetails = ({ fileNumber }) => {
             >
               <Edit size={20} className="mr-1" />
               Edit
+            </button>
+            <button
+              onClick={(e) => confirmDelete(e, selectedSeizure)}
+              className="flex items-center text-red-600 hover:text-red-800"
+            >
+              <Trash2 size={20} className="mr-1" />
+              Delete
             </button>
           </div>
         </div>
