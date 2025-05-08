@@ -20,7 +20,7 @@ export const AxiosWrapper = async (method, route, data = {}) => {
     throw new Error("No access token found");
   }
 
-  const url = `${import.meta.env.VITE_APP_BACKEND_URL}/api/${route}`;
+  const url = `${import.meta.env.VITE_BACKEND_API}/api/${route}`;
 
   const config = {
     method: method.toLowerCase(),
@@ -81,7 +81,7 @@ export const AxiosWrapper = async (method, route, data = {}) => {
 const refreshAccessToken = async (refreshToken) => {
   try {
     const res = await axios.post(
-      `${import.meta.env.VITE_APP_BACKEND_URL}/api/token/refresh`,
+      `${import.meta.env.VITE_BACKEND_API}/api/token/refresh`,
       { refresh: refreshToken }
     );
     return res.data.access; // Assuming the new access token is in res.data.access

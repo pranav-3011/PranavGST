@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
+import { AxiosWrapper } from '../Utils/Auth/AxiosWrapper';
 
 const FormContext = createContext();
 
@@ -58,30 +59,15 @@ export const FormProvider = ({ children }) => {
     setIsLoading(true);
     setError(null);
     try {
-      const userData = JSON.parse(localStorage.getItem("userData"));
-      if (!userData?.access) {
-        throw new Error("No access token found");
-      }
-
       // Fetch source options
-      const sourceResponse = await fetch(`${import.meta.env.VITE_BACKEND_API}/investigation/sources/`, {
-        headers: {
-          'Authorization': `Bearer ${userData.access}`
-        }
-      });
-      const sourceData = await sourceResponse.json();
+      const sourceData = await AxiosWrapper('get', 'investigation/sources/');
       setSourceOptions(sourceData.map(source => ({
         value: source.id.toString(),
         label: source.name
       })));
 
       // Fetch division options
-      const divisionResponse = await fetch(`${import.meta.env.VITE_BACKEND_API}/investigation/divisions/`, {
-        headers: {
-          'Authorization': `Bearer ${userData.access}`
-        }
-      });
-      const divisionData = await divisionResponse.json();
+      const divisionData = await AxiosWrapper('get', 'investigation/divisions/');
       setDivisionOptions(divisionData.map(division => ({
         value: division.id.toString(),
         label: division.name
@@ -103,20 +89,7 @@ export const FormProvider = ({ children }) => {
     }
 
     try {
-      const userData = JSON.parse(localStorage.getItem("userData"));
-      if (!userData?.access) {
-        throw new Error("No access token found");
-      }
-
-      const rangeResponse = await fetch(
-        `${import.meta.env.VITE_BACKEND_API}/investigation/ranges/division/${divisionId}/`,
-        {
-          headers: {
-            'Authorization': `Bearer ${userData.access}`
-          }
-        }
-      );
-      const rangeData = await rangeResponse.json();
+      const rangeData = await AxiosWrapper('get', `investigation/ranges/division/${divisionId}/`);
       setRangeOptions(rangeData.map(range => ({
         value: range.id.toString(),
         label: range.name
@@ -128,40 +101,7 @@ export const FormProvider = ({ children }) => {
     }
   };
 
-  // Reset all form data to initial state
-  const resetForm = () => {
-    setFormData({
-      source: "",
-      file_number: "",
-      e_office_file_no: "",
-      date_of_detection: getCurrentDate(),
-      due_date_of_scn: getCurrentDate(),
-      nature_of_offence: "",
-      period_involved: "",
-    });
-
-    setTaxpayerData({
-      gstin: "",
-      name: "",
-      trade_name: "",
-      address: "",
-    });
-
-    setJurisdictionData({
-      division_name: "",
-      range_name: "",
-    });
-
-    setContactPersonData({
-      first_name: "",
-      last_name: "",
-      email: "",
-      address: "",
-      phone_number: "",
-    });
-  };
-
-  // Handle input changes for main form
+  // Handle form data changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -170,7 +110,7 @@ export const FormProvider = ({ children }) => {
     }));
   };
 
-  // Handle date input changes
+  // Handle date changes
   const handleDateChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -188,7 +128,7 @@ export const FormProvider = ({ children }) => {
     }));
   };
 
-  // Handle jurisdiction data changes (division and range)
+  // Handle jurisdiction data changes
   const handleJurisdictionChange = (e) => {
     const { name, value } = e.target;
     setJurisdictionData((prevData) => ({
@@ -197,19 +137,14 @@ export const FormProvider = ({ children }) => {
     }));
   };
 
-  // Custom handler for division change that also clears range selection
-  const handleDivisionChange = async (e) => {
-    const { value } = e.target;
-    handleJurisdictionChange(e);
-    // Clear range selection when division changes
-    handleJurisdictionChange({
-      target: {
-        name: 'range_name',
-        value: ''
-      }
-    });
-    // Fetch ranges for the new division
-    await fetchRanges(value);
+  // Handle division changes
+  const handleDivisionChange = (e) => {
+    const { name, value } = e.target;
+    setJurisdictionData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+    fetchRanges(value);
   };
 
   // Handle contact person data changes
@@ -224,54 +159,66 @@ export const FormProvider = ({ children }) => {
   // Post investigation entry
   const postInvestigation = async () => {
     try {
-      const userData = JSON.parse(localStorage.getItem("userData"));
-      if (!userData?.access) {
-        throw new Error("No access token found");
-      }
-
       // Format period_involved as YYYY-MM-DD
       const formattedPeriod = formData.period_involved.split('T')[0];
 
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_API}/investigation/investigations/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${userData.access}`
-        },
-        body: JSON.stringify({
-          taxpayers: [
-            {
-              gstin: taxpayerData.gstin,
-              name: taxpayerData.name,
-              trade_name: taxpayerData.trade_name,
-              email: contactPersonData.email,
-              phone_number: contactPersonData.phone_number,
-              address: taxpayerData.address,
-              division: parseInt(jurisdictionData.division_name) || 0,
-              range: parseInt(jurisdictionData.range_name) || 0
-            }
-          ],
-          file_number: formData.file_number,
-          e_office_file_no: formData.e_office_file_no,
-          date_of_detection: formData.date_of_detection,
-          nature_of_offence: formData.nature_of_offence,
-          period_involved: formattedPeriod,
-          source: parseInt(formData.source) || 0
-        })
+      const data = await AxiosWrapper('post', 'investigation/investigations/', {
+        taxpayers: [
+          {
+            gstin: taxpayerData.gstin,
+            name: taxpayerData.name,
+            trade_name: taxpayerData.trade_name,
+            email: contactPersonData.email,
+            phone_number: contactPersonData.phone_number,
+            address: taxpayerData.address,
+            division: parseInt(jurisdictionData.division_name) || 0,
+            range: parseInt(jurisdictionData.range_name) || 0
+          }
+        ],
+        file_number: formData.file_number,
+        e_office_file_no: formData.e_office_file_no,
+        date_of_detection: formData.date_of_detection,
+        nature_of_offence: formData.nature_of_offence,
+        period_involved: formattedPeriod,
+        source: parseInt(formData.source) || 0
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.errors?.[0]?.detail || 'Failed to post investigation');
-      }
-
-      const data = await response.json();
       resetForm(); // Reset form after successful submission
       return data;
     } catch (error) {
       console.error('Error posting investigation:', error);
       throw error;
     }
+  };
+
+  // Reset form data
+  const resetForm = () => {
+    setFormData({
+      source: "",
+      file_number: "",
+      e_office_file_no: "",
+      date_of_detection: getCurrentDate(),
+      due_date_of_scn: getCurrentDate(),
+      nature_of_offence: "",
+      period_involved: "",
+    });
+    setTaxpayerData({
+      gstin: "",
+      name: "",
+      trade_name: "",
+      address: "",
+    });
+    setJurisdictionData({
+      division_name: "",
+      range_name: "",
+    });
+    setContactPersonData({
+      first_name: "",
+      last_name: "",
+      email: "",
+      address: "",
+      phone_number: "",
+    });
   };
 
   // Handle form submission

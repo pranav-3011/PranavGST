@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { DataGrid } from '@mui/x-data-grid';
 import { Box, Typography, Paper, Link } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { AxiosWrapper } from '../../Utils/Auth/AxiosWrapper';
 
 const EntryDetails = () => {
   const [investigations, setInvestigations] = useState([]);
@@ -12,27 +13,12 @@ const EntryDetails = () => {
   useEffect(() => {
     const fetchInvestigations = async () => {
       try {
-        const userData = JSON.parse(localStorage.getItem("userData"));
-        if (!userData?.access) {
-          throw new Error("No access token found");
-        }
-
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_API}/investigation/investigations/`, {
-          headers: {
-            'Authorization': `Bearer ${userData.access}`
-          }
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch investigations');
-        }
-
-        const data = await response.json();
+        const data = await AxiosWrapper('get', 'investigation/investigations/');
         setInvestigations(data);
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching investigations:', error);
-        setError(error.message);
+        setError(error.message || 'Failed to fetch investigations');
         setIsLoading(false);
       }
     };
@@ -55,7 +41,7 @@ const EntryDetails = () => {
         <Link
           component="button"
           variant="body2"
-          onClick={() => navigate(`/investigation/${params.row.file_number}`)}
+          onClick={() => navigate(`/investigation/${params.row.id}`)}
           sx={{ textDecoration: 'none', color: 'primary.main' }}
         >
           {params.row?.file_number || '-'}
