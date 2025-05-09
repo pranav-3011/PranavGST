@@ -23,10 +23,10 @@ const DrcForm = ({ onSubmit, submitButtonText, formData, handleChange }) => (
             required
           >
             <option value="">Select Type</option>
-            <option value="DRC-01">DRC-01</option>
-            <option value="DRC-02">DRC-02</option>
-            <option value="DRC-03">DRC-03</option>
-            <option value="DRC-04">DRC-04</option>
+            <option value="type1">Type 1</option>
+            <option value="type2">Type 2</option>
+            <option value="type3">Type 3</option>
+            <option value="type4">Type 4</option>
           </select>
         </div>
         <InputBox
@@ -41,11 +41,7 @@ const DrcForm = ({ onSubmit, submitButtonText, formData, handleChange }) => (
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Previous Date of Issuance <span className="text-red-500">*</span>
-          </label>
-          <input
+      <input
             type="date"
             name="previous_date_of_issuence"
             value={formData.previous_date_of_issuence}
@@ -54,7 +50,6 @@ const DrcForm = ({ onSubmit, submitButtonText, formData, handleChange }) => (
             onFocus={(e) => e.target.showPicker()}
             required
           />
-        </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Date of Issuance <span className="text-red-500">*</span>

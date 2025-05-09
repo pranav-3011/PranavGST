@@ -7,90 +7,61 @@ import CustomButton from "../../Utils/UI/CustomButton";
 import { toast } from "react-toastify";
 
 // Form component outside of main component to prevent re-creation on every render
-const QuantificationForm = ({ onSubmit, submitButtonText, formData, handleChange }) => {
-  // Generate an array of years for the dropdown (last 10 years + current year + next 2 years)
-  const generateYearOptions = () => {
-    const currentYear = new Date().getFullYear();
-    const years = [];
-    // Add last 10 years
-    for (let i = 10; i > 0; i--) {
-      years.push(currentYear - i);
-    }
-    // Add current year
-    years.push(currentYear);
-    // Add next 2 years
-    for (let i = 1; i <= 2; i++) {
-      years.push(currentYear + i);
-    }
-    return years.sort((a, b) => a - b); // Sort in ascending order
-  };
-
-  const yearOptions = generateYearOptions();
-
-  return (
-    <form onSubmit={onSubmit} className="p-4">
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Date of Quantification <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="date"
-              name="date_of_quantification"
-              value={formData.date_of_quantification}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 date-picker"
-              onFocus={(e) => e.target.showPicker()}
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Liability Detected for FY <span className="text-red-500">*</span>
-            </label>
-            <select
-              name="liability_detected_for_fy"
-              value={formData.liability_detected_for_fy}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              required
-            >
-              <option value="">Select Financial Year</option>
-              {yearOptions.map(year => (
-                <option key={year} value={`${year}-${year+1}`}>{`${year}-${year+1}`}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-
+const QuantificationForm = ({ onSubmit, submitButtonText, formData, handleChange }) => (
+  <form onSubmit={onSubmit} className="p-4">
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Amount <span className="text-red-500">*</span>
+            Date of Quantification <span className="text-red-500">*</span>
           </label>
           <input
-            type="number"
-            name="amount"
-            value={formData.amount}
+            type="date"
+            name="date_of_quantification"
+            value={formData.date_of_quantification}
             onChange={handleChange}
-            step="0.01"
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 date-picker"
+            onFocus={(e) => e.target.showPicker()}
             required
           />
         </div>
-
-        <div className="flex justify-end">
-          <CustomButton
-            type="submit"
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium transition-colors"
-          >
-            {submitButtonText}
-          </CustomButton>
-        </div>
+        <InputBox
+          name="liability_detected_for_fy"
+          label="Liability Detected for FY"
+          type="text"
+          value={formData.liability_detected_for_fy}
+          onChange={handleChange}
+          required
+          maxLength={100}
+        />
       </div>
-    </form>
-  );
-};
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Amount <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="number"
+          name="amount"
+          value={formData.amount}
+          onChange={handleChange}
+          step="0.01"
+          className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          required
+        />
+      </div>
+
+      <div className="flex justify-end">
+        <CustomButton
+          type="submit"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium transition-colors"
+        >
+          {submitButtonText}
+        </CustomButton>
+      </div>
+    </div>
+  </form>
+);
 
 const QuantificationDetails = ({ fileNumber }) => {
   const navigate = useNavigate();

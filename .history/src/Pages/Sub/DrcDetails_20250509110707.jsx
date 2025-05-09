@@ -23,10 +23,10 @@ const DrcForm = ({ onSubmit, submitButtonText, formData, handleChange }) => (
             required
           >
             <option value="">Select Type</option>
-            <option value="DRC-01">DRC-01</option>
-            <option value="DRC-02">DRC-02</option>
-            <option value="DRC-03">DRC-03</option>
-            <option value="DRC-04">DRC-04</option>
+            <option value="type1">Type 1</option>
+            <option value="type2">Type 2</option>
+            <option value="type3">Type 3</option>
+            <option value="type4">Type 4</option>
           </select>
         </div>
         <InputBox
