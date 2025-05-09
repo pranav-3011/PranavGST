@@ -254,7 +254,7 @@ const Investigation = () => {
                 </div>
               </div>
 
-              <div className="hidden md:block">
+              <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Investigation Period <span className="text-red-500">*</span>
                 </label>
@@ -423,41 +423,6 @@ const Investigation = () => {
                   onChange={handleTaxpayerChange}
                   required
                 ></textarea>
-              </div>
-
-              {/* Investigation Period - Visible only on mobile */}
-              <div className="mt-6 block md:hidden">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Investigation Period <span className="text-red-500">*</span>
-                </label>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-600 mb-1">
-                      From Date <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="date"
-                      name="from_date"
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      value={formData.from_date || ""}
-                      onChange={handleDateChange}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-600 mb-1">
-                      To Date <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="date"
-                      name="to_date"
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      value={formData.to_date || ""}
-                      onChange={handleDateChange}
-                      required
-                    />
-                  </div>
-                </div>
               </div>
             </div>
 

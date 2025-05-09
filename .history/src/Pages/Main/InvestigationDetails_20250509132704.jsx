@@ -201,8 +201,10 @@ const InvestigationDetails = () => {
                         <p className="font-medium">{investigation.from_date ? new Date(investigation.from_date).toLocaleDateString() : '-'}</p>
                       </div>
                       </div>
-                      <span className="text-gray-500">-</span> 
-                      <div className="mr-4">
+                   
+                   
+                     
+                      <div>
                         <p className="text-sm text-gray-600">Period To</p>
                         <p className="font-medium">{investigation.to_date ? new Date(investigation.to_date).toLocaleDateString() : '-'}</p>
                       </div>

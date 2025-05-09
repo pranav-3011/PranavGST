@@ -171,8 +171,8 @@ export const FormProvider = ({ children }) => {
             gstin: taxpayerData.gstin,
             name: taxpayerData.name,
             trade_name: taxpayerData.trade_name,
-            email: taxpayerData.email,
-            phone_number: taxpayerData.phone_number,
+            email: contactPersonData.email,
+            phone_number: contactPersonData.phone_number,
             address: taxpayerData.address,
             division: parseInt(jurisdictionData.division_name) || 0,
             range: parseInt(jurisdictionData.range_name) || 0

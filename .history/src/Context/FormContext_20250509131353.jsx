@@ -18,11 +18,11 @@ export const FormProvider = ({ children }) => {
     source: "",
     file_number: "",
     e_office_file_no: "",
-    date_of_detection: "",
-    due_date_of_scn: "",
+    date_of_detection: getCurrentDate(),
+    due_date_of_scn: getCurrentDate(),
     nature_of_offence: "",
-    from_date: "",
-    to_date: "",
+    from_date: getCurrentDate(),
+    to_date: getCurrentDate(),
   });
 
   // State for taxpayer details
@@ -162,8 +162,8 @@ export const FormProvider = ({ children }) => {
   // Post investigation entry
   const postInvestigation = async () => {
     try {
-      // // Format period_involved as YYYY-MM-DD
-      // const formattedPeriod = formData.period_involved.split('T')[0];
+      // Format period_involved as YYYY-MM-DD
+      const formattedPeriod = formData.period_involved.split('T')[0];
 
       const data = await AxiosWrapper('post', 'investigation/investigations/', {
         taxpayers: [
@@ -171,8 +171,8 @@ export const FormProvider = ({ children }) => {
             gstin: taxpayerData.gstin,
             name: taxpayerData.name,
             trade_name: taxpayerData.trade_name,
-            email: taxpayerData.email,
-            phone_number: taxpayerData.phone_number,
+            email: contactPersonData.email,
+            phone_number: contactPersonData.phone_number,
             address: taxpayerData.address,
             division: parseInt(jurisdictionData.division_name) || 0,
             range: parseInt(jurisdictionData.range_name) || 0
@@ -182,8 +182,7 @@ export const FormProvider = ({ children }) => {
         e_office_file_no: formData.e_office_file_no,
         date_of_detection: formData.date_of_detection,
         nature_of_offence: formData.nature_of_offence,
-        from_date: formData.from_date,
-        to_date: formData.to_date,
+        period_involved: formattedPeriod,
         source: parseInt(formData.source) || 0
       });
 
@@ -201,11 +200,10 @@ export const FormProvider = ({ children }) => {
       source: "",
       file_number: "",
       e_office_file_no: "",
-      date_of_detection: "",
-      due_date_of_scn: "",
+      date_of_detection: getCurrentDate(),
+      due_date_of_scn: getCurrentDate(),
       nature_of_offence: "",
-      from_date: "",
-      to_date: "",
+      period_involved: "",
     });
     setTaxpayerData({
       gstin: "",

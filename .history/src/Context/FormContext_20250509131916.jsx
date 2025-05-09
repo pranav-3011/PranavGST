@@ -171,8 +171,8 @@ export const FormProvider = ({ children }) => {
             gstin: taxpayerData.gstin,
             name: taxpayerData.name,
             trade_name: taxpayerData.trade_name,
-            email: taxpayerData.email,
-            phone_number: taxpayerData.phone_number,
+            email: contactPersonData.email,
+            phone_number: contactPersonData.phone_number,
             address: taxpayerData.address,
             division: parseInt(jurisdictionData.division_name) || 0,
             range: parseInt(jurisdictionData.range_name) || 0
@@ -201,11 +201,11 @@ export const FormProvider = ({ children }) => {
       source: "",
       file_number: "",
       e_office_file_no: "",
-      date_of_detection: "",
-      due_date_of_scn: "",
+      date_of_detection: getCurrentDate(),
+      due_date_of_scn: getCurrentDate(),
       nature_of_offence: "",
-      from_date: "",
-      to_date: "",
+      from_date: getCurrentDate(),
+      to_date: getCurrentDate(),
     });
     setTaxpayerData({
       gstin: "",

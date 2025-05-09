@@ -193,16 +193,16 @@ const InvestigationDetails = () => {
                         <p className="font-medium">{investigation.date_of_detection ? new Date(investigation.date_of_detection).toLocaleDateString() : '-'}</p>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between gap-3 p-3 bg-gray-50 rounded-lg">
-                      <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                       <Calendar className="text-gray-500" size={18} />
                       <div>
                         <p className="text-sm text-gray-600">Period From</p>
                         <p className="font-medium">{investigation.from_date ? new Date(investigation.from_date).toLocaleDateString() : '-'}</p>
                       </div>
-                      </div>
-                      <span className="text-gray-500">-</span> 
-                      <div className="mr-4">
+                    </div>
+                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                      <Calendar className="text-gray-500" size={18} />
+                      <div>
                         <p className="text-sm text-gray-600">Period To</p>
                         <p className="font-medium">{investigation.to_date ? new Date(investigation.to_date).toLocaleDateString() : '-'}</p>
                       </div>

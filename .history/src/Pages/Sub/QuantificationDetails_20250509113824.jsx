@@ -1,25 +1,44 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AxiosWrapper } from "../../Utils/Auth/AxiosWrapper";
-import { Plus, ArrowLeft, FileText, Calendar, DollarSign, Edit, Trash2, AlertTriangle } from "lucide-react";
+import { Plus, ArrowLeft, FileText, Calendar, DollarSign, Hash, Edit, Trash2 } from "lucide-react";
 import InputBox from "../../Utils/UI/InputBox";
 import CustomButton from "../../Utils/UI/CustomButton";
 import { toast } from "react-toastify";
 
 // Form component outside of main component to prevent re-creation on every render
-const AdvisoryForm = ({ onSubmit, submitButtonText, formData, handleChange }) => {
+const QuantificationForm = ({ onSubmit, submitButtonText, formData, handleChange }) => {
+  // Generate an array of years for the dropdown (last 10 years + current year + next 2 years)
+  const generateYearOptions = () => {
+    const currentYear = new Date().getFullYear();
+    const years = [];
+    // Add last 10 years
+    for (let i = 10; i > 0; i--) {
+      years.push(currentYear - i);
+    }
+    // Add current year
+    years.push(currentYear);
+    // Add next 2 years
+    for (let i = 1; i <= 2; i++) {
+      years.push(currentYear + i);
+    }
+    return years.sort((a, b) => a - b); // Sort in ascending order
+  };
+
+  const yearOptions = generateYearOptions();
+
   return (
     <form onSubmit={onSubmit} className="p-4">
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Advisory Issued Date <span className="text-red-500">*</span>
+              Date of Quantification <span className="text-red-500">*</span>
             </label>
             <input
               type="date"
-              name="advisory_issued_date"
-              value={formData.advisory_issued_date}
+              name="date_of_quantification"
+              value={formData.date_of_quantification}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 date-picker"
               onFocus={(e) => e.target.showPicker()}
@@ -28,17 +47,36 @@ const AdvisoryForm = ({ onSubmit, submitButtonText, formData, handleChange }) =>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Amount <span className="text-red-500">*</span>
+              Liability Detected for FY <span className="text-red-500">*</span>
             </label>
-            <input
-              type="number"
-              name="amount"
-              value={formData.amount}
+            <select
+              name="liability_detected_for_fy"
+              value={formData.liability_detected_for_fy}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               required
-            />
+            >
+              <option value="">Select Financial Year</option>
+              {yearOptions.map(year => (
+                <option key={year} value={`${year}-${year+1}`}>{`${year}-${year+1}`}</option>
+              ))}
+            </select>
           </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Amount <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="number"
+            name="amount"
+            value={formData.amount}
+            onChange={handleChange}
+            step="0.01"
+            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            required
+          />
         </div>
 
         <div className="flex justify-end">
@@ -54,133 +92,136 @@ const AdvisoryForm = ({ onSubmit, submitButtonText, formData, handleChange }) =>
   );
 };
 
-const AdvisoryDetails = ({ fileNumber }) => {
+const QuantificationDetails = ({ fileNumber }) => {
   const navigate = useNavigate();
-  const [advisories, setAdvisories] = useState([]);
-  const [selectedAdvisory, setSelectedAdvisory] = useState(null);
+  const [quantifications, setQuantifications] = useState([]);
+  const [selectedQuantification, setSelectedQuantification] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [advisoryToDelete, setAdvisoryToDelete] = useState(null);
+  const [quantificationToDelete, setQuantificationToDelete] = useState(null);
   const [formData, setFormData] = useState({
-    advisory_issued_date: "",
+    date_of_quantification: "",
     amount: "",
+    liability_detected_for_fy: "",
   });
 
   // Create a resetForm function to reset form data to initial state
   const resetFormData = () => {
     setFormData({
-      advisory_issued_date: "",
+      date_of_quantification: "",
       amount: "",
+      liability_detected_for_fy: "",
     });
   };
 
   useEffect(() => {
     if (fileNumber) {
-      fetchAdvisories();
+      fetchQuantifications();
     }
   }, [fileNumber]);
 
-  const fetchAdvisories = async () => {
+  const fetchQuantifications = async () => {
     try {
       const data = await AxiosWrapper(
         "get",
-        `investigation/advisories/investigation/${fileNumber}/`
+        `investigation/quantifications/investigation/${fileNumber}/`
       );
-      setAdvisories(data);
+      setQuantifications(data);
       setIsLoading(false);
     } catch (error) {
-      console.error("Error fetching advisories:", error);
-      setError(error.message || "Failed to fetch advisories");
-      toast.error(error.message || "Failed to fetch advisories");
+      console.error("Error fetching quantifications:", error);
+      setError(error.message || "Failed to fetch quantifications");
+      toast.error(error.message || "Failed to fetch quantifications");
       setIsLoading(false);
     }
   };
 
-  const handleAddAdvisory = async (e) => {
+  const handleAddQuantification = async (e) => {
     e.preventDefault();
     try {
-      await AxiosWrapper("post", "investigation/advisories/", {
+      await AxiosWrapper("post", "investigation/quantifications/", {
         ...formData,
         investigation: fileNumber,
       });
       setShowAddForm(false);
       resetFormData();
-      fetchAdvisories();
-      toast.success("Advisory added successfully");
+      fetchQuantifications();
+      toast.success("Quantification added successfully");
     } catch (error) {
-      console.error("Error adding advisory:", error);
-      setError(error.message || "Failed to add advisory");
-      toast.error(error.message || "Failed to add advisory");
+      console.error("Error adding quantification:", error);
+      setError(error.message || "Failed to add quantification");
+      toast.error(error.message || "Failed to add quantification");
     }
   };
 
-  const handleViewAdvisory = async (id) => {
+  const handleViewQuantification = async (id) => {
     try {
-      const data = await AxiosWrapper("get", `investigation/advisories/${id}/`);
-      setSelectedAdvisory(data);
+      const data = await AxiosWrapper("get", `investigation/quantifications/${id}/`);
+      setSelectedQuantification(data);
     } catch (error) {
-      console.error("Error fetching advisory details:", error);
-      setError(error.message || "Failed to fetch advisory details");
-      toast.error(error.message || "Failed to fetch advisory details");
+      console.error("Error fetching quantification details:", error);
+      setError(error.message || "Failed to fetch quantification details");
+      toast.error(error.message || "Failed to fetch quantification details");
     }
   };
 
-  const handleEditAdvisory = () => {
+  const handleEditQuantification = () => {
     setFormData({
-      advisory_issued_date: selectedAdvisory.advisory_issued_date || "",
-      amount: selectedAdvisory.amount || "",
+      date_of_quantification: selectedQuantification.date_of_quantification || "",
+      amount: selectedQuantification.amount || "",
+      liability_detected_for_fy: selectedQuantification.liability_detected_for_fy || "",
     });
     setIsEditing(true);
   };
 
-  const handleUpdateAdvisory = async (e) => {
+  const handleUpdateQuantification = async (e) => {
     e.preventDefault();
     try {
-      await AxiosWrapper("put", `investigation/advisories/${selectedAdvisory.id}/`, {
+      await AxiosWrapper("put", `investigation/quantifications/${selectedQuantification.id}/`, {
         ...formData,
         investigation: fileNumber,
       });
       setIsEditing(false);
-      // Refresh the selected advisory data
-      handleViewAdvisory(selectedAdvisory.id);
+      // Refresh the selected quantification data
+      handleViewQuantification(selectedQuantification.id);
       // Refresh the list
-      fetchAdvisories();
+      fetchQuantifications();
       resetFormData();
-      toast.success("Advisory updated successfully");
+      toast.success("Quantification updated successfully");
     } catch (error) {
-      console.error("Error updating advisory:", error);
-      toast.error(error.message || "Failed to update advisory");
+      console.error("Error updating quantification:", error);
+      toast.error(error.message || "Failed to update quantification");
     }
   };
 
-  const confirmDelete = (e, advisory) => {
+  const confirmDelete = (e, quantification) => {
     e.stopPropagation(); // Prevent card click event
-    setAdvisoryToDelete(advisory);
+    setQuantificationToDelete(quantification);
     setShowDeleteConfirm(true);
   };
 
-  const handleDeleteAdvisory = async () => {
-    if (!advisoryToDelete) return;
+  const handleDeleteQuantification = async () => {
+    if (!quantificationToDelete) return;
     
     try {
-      await AxiosWrapper("delete", `investigation/advisories/${advisoryToDelete.id}/`);
+      await AxiosWrapper("delete", `investigation/quantifications/${quantificationToDelete.id}/`);
       setShowDeleteConfirm(false);
-      setAdvisoryToDelete(null);
+      setQuantificationToDelete(null);
       
-      // If we're viewing the deleted advisory, go back to the list
-      if (selectedAdvisory && selectedAdvisory.id === advisoryToDelete.id) {
-        setSelectedAdvisory(null);
+      // If we're viewing the deleted quantification, go back to the list
+      if (selectedQuantification && selectedQuantification.id === quantificationToDelete.id) {
+        setSelectedQuantification(null);
       }
       
       // Refresh the list
-      fetchAdvisories();
-      toast.success("Advisory deleted successfully");
+      fetchQuantifications();
+      toast.success("Quantification deleted successfully");
     } catch (error) {
-      console.error("Error deleting advisory:", error);
-      toast.error(error.message || "Failed to delete advisory");
+      console.error("Error deleting quantification:", error);
+      toast.error(error.message || "Failed to delete quantification");
       setShowDeleteConfirm(false);
     }
   };
@@ -198,7 +239,7 @@ const AdvisoryDetails = ({ fileNumber }) => {
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',
-      minimumFractionDigits: 0
+      minimumFractionDigits: 2
     }).format(amount);
   };
 
@@ -208,7 +249,7 @@ const AdvisoryDetails = ({ fileNumber }) => {
       <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl">
         <h3 className="text-lg font-semibold mb-4">Confirm Deletion</h3>
         <p className="mb-6">
-          Are you sure you want to delete this advisory? This action cannot be undone.
+          Are you sure you want to delete this quantification? This action cannot be undone.
         </p>
         <div className="flex justify-end space-x-4">
           <button
@@ -218,7 +259,7 @@ const AdvisoryDetails = ({ fileNumber }) => {
             Cancel
           </button>
           <button
-            onClick={handleDeleteAdvisory}
+            onClick={handleDeleteQuantification}
             className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
           >
             Delete
@@ -228,7 +269,7 @@ const AdvisoryDetails = ({ fileNumber }) => {
     </div>
   );
 
-  if (selectedAdvisory && isEditing) {
+  if (selectedQuantification && isEditing) {
     return (
       <div className="max-w-4xl mx-auto p-4">
         <div className="mb-4">
@@ -248,12 +289,12 @@ const AdvisoryDetails = ({ fileNumber }) => {
           <div className="p-4 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
               <Edit size={20} className="text-blue-600" />
-              Edit Advisory
+              Edit Quantification
             </h2>
           </div>
-          <AdvisoryForm 
-            onSubmit={handleUpdateAdvisory} 
-            submitButtonText="Update Advisory" 
+          <QuantificationForm 
+            onSubmit={handleUpdateQuantification} 
+            submitButtonText="Update Quantification" 
             formData={formData}
             handleChange={handleChange}
           />
@@ -262,12 +303,12 @@ const AdvisoryDetails = ({ fileNumber }) => {
     );
   }
 
-  if (selectedAdvisory) {
+  if (selectedQuantification) {
     return (
       <div className="max-w-4xl mx-auto p-4">
         <div className="mb-4 flex justify-between">
           <button
-            onClick={() => setSelectedAdvisory(null)}
+            onClick={() => setSelectedQuantification(null)}
             className="flex items-center text-gray-600 hover:text-blue-600"
           >
             <ArrowLeft size={20} className="mr-2" />
@@ -275,7 +316,7 @@ const AdvisoryDetails = ({ fileNumber }) => {
           </button>
           <div className="flex space-x-2">
             <button
-              onClick={handleEditAdvisory}
+              onClick={handleEditQuantification}
               className="flex items-center text-blue-600 hover:text-blue-800"
             >
               <Edit size={20} className="mr-1" />
@@ -288,7 +329,7 @@ const AdvisoryDetails = ({ fileNumber }) => {
           <div className="p-4 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
               <FileText size={20} className="text-blue-600" />
-              Advisory Details
+              Quantification Details
             </h2>
           </div>
           <div className="p-4">
@@ -296,21 +337,31 @@ const AdvisoryDetails = ({ fileNumber }) => {
               <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                 <Calendar className="text-gray-500" size={18} />
                 <div>
-                  <p className="text-sm text-gray-600">Advisory Issued Date</p>
+                  <p className="text-sm text-gray-600">Date of Quantification</p>
                   <p className="font-medium">
-                    {selectedAdvisory.advisory_issued_date
-                      ? new Date(selectedAdvisory.advisory_issued_date).toLocaleDateString()
+                    {selectedQuantification.date_of_quantification
+                      ? new Date(selectedQuantification.date_of_quantification).toLocaleDateString()
                       : "-"}
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                <DollarSign className="text-gray-500" size={18} />
+                <Hash className="text-gray-500" size={18} />
                 <div>
-                  <p className="text-sm text-gray-600">Amount</p>
-                  <p className="font-medium">{formatAmount(selectedAdvisory.amount)}</p>
+                  <p className="text-sm text-gray-600">Liability Detected for FY</p>
+                  <p className="font-medium">{selectedQuantification.liability_detected_for_fy || "-"}</p>
                 </div>
               </div>
+            </div>
+            
+            <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <DollarSign className="text-blue-600" size={20} />
+                <p className="font-semibold">Amount</p>
+              </div>
+              <p className="text-2xl font-bold text-blue-600">
+                {selectedQuantification.amount ? formatAmount(selectedQuantification.amount) : "-"}
+              </p>
             </div>
             
             <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -319,8 +370,8 @@ const AdvisoryDetails = ({ fileNumber }) => {
                 <div>
                   <p className="text-sm text-gray-600">Added On</p>
                   <p className="font-medium">
-                    {selectedAdvisory.added_on
-                      ? new Date(selectedAdvisory.added_on).toLocaleString()
+                    {selectedQuantification.added_on
+                      ? new Date(selectedQuantification.added_on).toLocaleString()
                       : "-"}
                   </p>
                 </div>
@@ -330,8 +381,8 @@ const AdvisoryDetails = ({ fileNumber }) => {
                 <div>
                   <p className="text-sm text-gray-600">Updated On</p>
                   <p className="font-medium">
-                    {selectedAdvisory.updated_on
-                      ? new Date(selectedAdvisory.updated_on).toLocaleString()
+                    {selectedQuantification.updated_on
+                      ? new Date(selectedQuantification.updated_on).toLocaleString()
                       : "-"}
                   </p>
                 </div>
@@ -363,12 +414,12 @@ const AdvisoryDetails = ({ fileNumber }) => {
           <div className="p-4 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
               <Plus size={20} className="text-blue-600" />
-              Add New Advisory
+              Add New Quantification
             </h2>
           </div>
-          <AdvisoryForm 
-            onSubmit={handleAddAdvisory} 
-            submitButtonText="Add Advisory" 
+          <QuantificationForm 
+            onSubmit={handleAddQuantification} 
+            submitButtonText="Add Quantification" 
             formData={formData}
             handleChange={handleChange}
           />
@@ -382,7 +433,7 @@ const AdvisoryDetails = ({ fileNumber }) => {
       {showDeleteConfirm && <DeleteConfirmationModal />}
       
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Advisories</h1>
+        <h1 className="text-2xl font-bold text-gray-800">Quantifications</h1>
         <CustomButton
           onClick={() => {
             resetFormData();
@@ -391,32 +442,32 @@ const AdvisoryDetails = ({ fileNumber }) => {
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition-colors flex items-center gap-2"
         >
           <Plus size={20} />
-          Add New Advisory
+          Add New Quantification
         </CustomButton>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {advisories.map((advisory) => (
+        {quantifications.map((quantification) => (
           <div
-            key={advisory.id}
+            key={quantification.id}
             className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 cursor-pointer hover:shadow-md transition-shadow relative group"
           >
             <div 
               className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-              onClick={(e) => confirmDelete(e, advisory)}
+              onClick={(e) => confirmDelete(e, quantification)}
             >
               <Trash2 size={18} className="text-red-500 hover:text-red-700" />
             </div>
             
-            <div onClick={() => handleViewAdvisory(advisory.id)} className="h-full">
+            <div onClick={() => handleViewQuantification(quantification.id)} className="h-full">
               <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 bg-amber-100 rounded-lg">
-                  <AlertTriangle className="text-amber-600" size={20} />
+                <div className="p-2 bg-green-100 rounded-lg">
+                  <DollarSign className="text-green-600" size={20} />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Advisory #{advisory.id}</p>
-                  <p className="font-medium text-amber-600">
-                    {formatAmount(advisory.amount)}
+                  <p className="text-sm text-gray-600">Quantification #{quantification.id}</p>
+                  <p className="font-medium text-green-600">
+                    {quantification.amount ? formatAmount(quantification.amount) : "-"}
                   </p>
                 </div>
               </div>
@@ -424,18 +475,14 @@ const AdvisoryDetails = ({ fileNumber }) => {
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <Calendar size={16} />
                   <span>
-                    Issued: {advisory.advisory_issued_date
-                      ? new Date(advisory.advisory_issued_date).toLocaleDateString()
+                    {quantification.date_of_quantification
+                      ? new Date(quantification.date_of_quantification).toLocaleDateString()
                       : "-"}
                   </span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <Calendar size={16} />
-                  <span>
-                    Added: {advisory.added_on
-                      ? new Date(advisory.added_on).toLocaleDateString()
-                      : "-"}
-                  </span>
+                  <Hash size={16} />
+                  <span className="truncate">FY: {quantification.liability_detected_for_fy || "-"}</span>
                 </div>
               </div>
             </div>
@@ -443,19 +490,19 @@ const AdvisoryDetails = ({ fileNumber }) => {
         ))}
       </div>
 
-      {advisories.length === 0 && !isLoading && (
+      {quantifications.length === 0 && !isLoading && (
         <div className="text-center py-8">
-          <p className="text-gray-600">No advisories found</p>
+          <p className="text-gray-600">No quantifications found</p>
         </div>
       )}
 
       {isLoading && (
         <div className="text-center py-8">
-          <p className="text-gray-600">Loading advisories...</p>
+          <p className="text-gray-600">Loading quantifications...</p>
         </div>
       )}
     </div>
   );
 };
 
-export default AdvisoryDetails;
+export default QuantificationDetails;
