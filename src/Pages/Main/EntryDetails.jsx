@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { DataGrid } from '@mui/x-data-grid';
-import { Box, Typography, Paper, Link } from '@mui/material';
+import { Box, Typography, Paper, Link, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { AxiosWrapper } from '../../Utils/Auth/AxiosWrapper';
 
@@ -189,9 +189,18 @@ const EntryDetails = () => {
 
   return (
     <Box sx={{ height: '100%', width: '100%', p: 2 }}>
-      <Typography variant="h5" component="h1" gutterBottom>
-        Investigation Entries
-      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Typography variant="h5" component="h1">
+          Investigation Register
+        </Typography>
+        <Button 
+          variant="contained" 
+          color="primary"
+          onClick={() => navigate('/entry-details/investigation')}
+        >
+          Add Case
+        </Button>
+      </Box>
       
       <Box sx={{ height: 'calc(100vh - 200px)', width: '100%' }}>
         <DataGrid

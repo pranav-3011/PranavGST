@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AxiosWrapper } from '../../Utils/Auth/AxiosWrapper';
-import { Plus, Edit, Trash2, Eye, ChevronRight } from 'lucide-react';
+import { Plus, Edit, Trash2, Eye, ChevronRight, FileText, User, Building, Calendar, Phone, Mail, MapPin } from 'lucide-react';
 
 // Import sub-pages
 import InvestigationRegister from '../Sub/InvestigationRegister';
@@ -26,7 +26,8 @@ import ITCBlockUnblockDetails from '../Sub/ITCBlockUnblockDetails';
 import LetterToOtherFormation from '../Sub/LetterToOtherFormation';
 import NoticeeDetails from '../Sub/NoticeeDetails';
 import InvolvedPerson from '../Sub/InvolvedPerson';
-
+import ArrestDetails from '../Sub/ArrestDetails';
+import ProvisionalAttachmentDetails from '../Sub/ProvisionalAttachmentDetails';
 const InvestigationDetails = () => {
     const { fileNumber } = useParams();
   const navigate = useNavigate();
@@ -34,6 +35,14 @@ const InvestigationDetails = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activePage, setActivePage] = useState('details');
+
+  const formatStatus = (status) => {
+    if (!status) return 'Not Set';
+    return status
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
 
   useEffect(() => {
     // Commented out API call for now
@@ -97,27 +106,40 @@ const InvestigationDetails = () => {
   };
 
   const actionButtons = [
-    { name: 'Investigation Register', component: InvestigationRegister },
-    { name: 'Source', component: Source },
-    { name: 'Taxpayer Details', component: TaxpayerDetails },
-    { name: 'Division', component: Division },
-    { name: 'Range', component: Range },
-    { name: 'Contact Person', component: ContactPerson },
+    { name: 'Summons Details', component: SummonsDetails },
     { name: 'Inspection Details', component: InspectionDetails },
     { name: 'Search Details', component: SearchDetails },
-    { name: 'Office Conducted Inspection', component: OfficeConductedInspection },
     { name: 'Seizure Details', component: SeizureDetails },
-    { name: 'Office Conducted Search', component: OfficeConductedSearch },
+    { name: 'Letter To Other Formation', component: LetterToOtherFormation },
+    { name: 'ITC Block Unblock Details', component: ITCBlockUnblockDetails },
     { name: 'DRC Details', component: DrcDetails },
-    { name: 'Summons Details', component: SummonsDetails },
+    {name: 'Provisional Attachment', component: ProvisionalAttachmentDetails},
+    { name: 'Detection', component: QuantificationDetails },
+    { name: 'Arrest Details', component: ArrestDetails },
+
+
+
     { name: 'Recovery Details', component: RecoveryDetails },
-    { name: 'Statement Details', component: SatementDetails },
-    { name: 'Quantification Details', component: QuantificationDetails },
+    // { name: 'Investigation Register', component: InvestigationRegister },
+    // { name: 'Source', component: Source },
+    { name: 'Taxpayer Details', component: TaxpayerDetails },
+    // { name: 'Division', component: Division },
+    // { name: 'Range', component: Range },
+    // { name: 'Contact Person', component: ContactPerson },
+    
+    // { name: 'Office Conducted Inspection', component: OfficeConductedInspection },
+    
+    // { name: 'Office Conducted Search', component: OfficeConductedSearch },
+    
+    
+    
+    // { name: 'Statement Details', component: SatementDetails },
+    
     { name: 'Advisory Details', component: AdvisoryDetails },
     { name: 'SCN Details', component: SCNDetails },
-    { name: 'ITC Block Unblock Details', component: ITCBlockUnblockDetails },
-    { name: 'Letter To Other Formation', component: LetterToOtherFormation },
-    { name: 'Noticee Details', component: NoticeeDetails },
+    
+    
+    // { name: 'Noticee Details', component: NoticeeDetails },
     { name: 'Involved Person', component: InvolvedPerson },
   ];
 
@@ -165,97 +187,121 @@ const InvestigationDetails = () => {
   return (
     <div className="max-w-full mx-auto p-4 bg-gray-50 min-h-screen">
       {/* Header Section */}
-      <div className="mb-6">
-        <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+      <div className="mb-4">
+        <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
           <div className="flex justify-between items-center">
-            <div 
-              className="cursor-pointer hover:text-blue-600 transition-colors"
-              onClick={() => setActivePage('details')}
-            >
-              <h1 className="text-2xl font-semibold text-gray-900">
-                Investigation Details
-              </h1>
-              <p className="text-sm text-gray-600 mt-1">
-                File Number: {investigation.file_number}
-              </p>
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-blue-100 rounded-lg">
+                <FileText className="text-[#00256c]" size={24} />
+              </div>
+              <div>
+                <h1 className="text-xl font-semibold text-gray-900">
+                  Investigation in respect of <span className='bg-blue-100 px-2 rounded-sm'><span className='text-blue-700'>{investigation.taxpayers[0].trade_name}</span></span> having GSTIN <span className='bg-blue-100 px-2 rounded-sm'><span className='text-blue-700'>{investigation.taxpayers[0].gstin}</span></span>
+                </h1>
+                <div className="text-sm text-gray-600">
+                  <span>Detected on {investigation.date_of_detection ? new Date(investigation.date_of_detection).toLocaleDateString() : '-'}</span>
+                </div>
+              </div>
             </div>
             <div className="flex gap-2">
-              <button
-                className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                title="Edit"
-              >
-                <Edit size={20} />
+              <button className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
+                <Edit size={18} />
               </button>
-              <button
-                className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                title="Delete"
-              >
-                <Trash2 size={20} />
+              <button className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
+                <Trash2 size={18} />
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {/* Main Content */}
         <div className="md:col-span-3">
           {activePage === 'details' ? (
-            <div className="space-y-6">
+            <div className="space-y-4">
               {/* Basic Information */}
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
-                  <h2 className="text-lg font-semibold text-gray-900">
-                    Basic Information
-                  </h2>
+              <div className="bg-white rounded-sm shadow-sm border border-gray-200">
+                <div className="p-4 border-b bg-indigo-50 border-gray-100">
+                  <div className="flex justify-between items-center">
+                    <h2 className="text-lg font-medium text-[#00256c] flex items-center gap-2">
+                      <FileText size={20} className="text-[#00256c]" />
+                      Case Information
+                    </h2>
+                    <span className={`px-4 py-2 rounded-full text-xs font-medium ${
+                      investigation.status === 'under_investigation' ? 'bg-green-100 text-green-800 border border-green-800' :
+                      investigation.status === 'transferred' ? 'bg-gray-100 text-gray-800 border border-grey-800' :
+                      investigation.status === 'ir_issue' ? 'bg-yellow-100 text-yellow-800 border border-yellow-800' :
+                      investigation.status === 'scn_issued'? 'bg-blue-100 text-blue-800 border border-blue-800':
+                      'bg-red-100 text-red-800 border border-red-800'
+                    }`}>
+                      {formatStatus(investigation.status)}
+                    </span>
+                  </div>
                 </div>
-                <div className="p-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                    <div className="bg-gray-50 px-4 py-2 rounded-lg border border-gray-100">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        File Number
-                      </label>
-                      <p className="text-gray-900 font-medium">{investigation.file_number || '-'}</p>
+                <div className="p-4">
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="flex items-center gap-3 p-3 bg-gray-50/50 rounded-sm border border-gray-100">
+                      <FileText className="text-[#00256c]" size={18} />
+                      <div>
+                        <p className="text-xs text-gray-500">File Number</p>
+                        <p className="font-medium text-gray-900">{investigation.file_number || '-'}</p>
+                      </div>
                     </div>
-                    <div className="bg-gray-50 px-4 py-2 rounded-lg border border-gray-100">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Date of Detection
-                      </label>
-                      <p className="text-gray-900 font-medium">
-                        {investigation.date_of_detection ? new Date(investigation.date_of_detection).toLocaleDateString() : '-'}
-                      </p>
+                    <div className="flex items-center gap-3 p-3 bg-gray-50/50 rounded-sm border border-gray-100">
+                      <Calendar className="text-[#00256c]" size={18} />
+                      <div>
+                        <p className="text-xs text-gray-500">Date of Detection</p>
+                        <p className="font-medium text-gray-900">{investigation.date_of_detection ? new Date(investigation.date_of_detection).toLocaleDateString() : '-'}</p>
+                      </div>
                     </div>
-                    <div className="bg-gray-50 px-4 py-2 rounded-lg border border-gray-100">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Period Involved
-                      </label>
-                      <p className="text-gray-900 font-medium">
-                        {investigation.period_involved ? new Date(investigation.period_involved).toLocaleDateString() : '-'}
-                      </p>
+                    <div className="flex items-center gap-3 p-3 bg-gray-50/50 rounded-sm border border-gray-100">
+                      <Calendar className="text-[#00256c]" size={18} />
+                      <div>
+                        <p className="text-xs text-gray-500">Period Involved</p>
+                        <p className="font-medium text-gray-900">{investigation.period_involved || '-'}</p>
+                      </div>
                     </div>
-                    <div className="bg-gray-50 px-4 py-2 rounded-lg border border-gray-100">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Currently Assigned Officer
-                      </label>
-                      <p className="text-gray-900 font-medium">{investigation.currently_assigned_officer || '-'}</p>
+                    <div className="flex items-center gap-3 p-3 bg-gray-50/50 rounded-sm border border-gray-100">
+                      <User className="text-[#00256c]" size={18} />
+                      <div>
+                        <p className="text-xs text-gray-500">Assigned Officer</p>
+                        <p className="font-medium text-gray-900">{investigation.currently_assigned_officer || '-'}</p>
+                      </div>
                     </div>
-                    <div className="bg-gray-50 px-4 py-2 rounded-lg border border-gray-100">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        E-Office File No.
-                      </label>
-                      <p className="text-gray-900 font-medium">{investigation.e_office_file_no || '-'}</p>
+                    <div className="flex items-center gap-3 p-3 bg-gray-50/50 rounded-sm border border-gray-100">
+                      <FileText className="text-[#00256c]" size={18} />
+                      <div>
+                        <p className="text-xs text-gray-500">E-Office File No.</p>
+                        <p className="font-medium text-gray-900">{investigation.e_office_file_no || '-'}</p>
+                      </div>
                     </div>
-                    <div className="bg-gray-50 px-4 py-2 rounded-lg border border-gray-100">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Nature of Offence
-                      </label>
-                      <p className="text-gray-900 font-medium">{investigation.nature_of_offence || '-'}</p>
+                    <div className="flex items-center gap-3 p-3 bg-gray-50/50 rounded-sm border border-gray-100">
+                      <Building className="text-[#00256c]" size={18} />
+                      <div>
+                        <p className="text-xs text-gray-500">Nature of Offence</p>
+                        <p className="font-medium text-gray-900">{investigation.nature_of_offence || '-'}</p>
+                      </div>
                     </div>
-                    <div className="bg-gray-50 px-4 py-2 rounded-lg border border-gray-100">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Source
-                      </label>
-                      <p className="text-gray-900 font-medium">{investigation.source_name || '-'}</p>
+                    <div className="flex items-center gap-3 p-3 bg-gray-50/50 rounded-sm border border-gray-100">
+                      <FileText className="text-[#00256c]" size={18} />
+                      <div>
+                        <p className="text-xs text-gray-500">Source</p>
+                        <p className="font-medium text-gray-900">
+                          {investigation.other_source && investigation.other_source.length > 0 
+                            ? investigation.other_source 
+                            : (investigation.source_name || '-')}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 p-3 bg-gray-50/50 rounded-sm border border-gray-100 col-span-2">
+                      <FileText className="text-[#00256c] mt-0.5" size={18} />
+                      <div className="w-full">
+                        <p className="text-xs text-gray-500">Brief Facts of Case</p>
+                        <p className="font-medium text-gray-900 whitespace-pre-wrap mt-1">
+                          {investigation.brief_facts_of_case || '-'}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -263,63 +309,72 @@ const InvestigationDetails = () => {
 
               {/* Taxpayer Details */}
               {investigation.taxpayers && investigation.taxpayers.length > 0 && (
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                  <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
-                    <h2 className="text-lg font-semibold text-gray-900">
-                      Taxpayer Details
+                <div className="bg-white rounded-sm shadow-sm border border-gray-200">
+                  <div className="p-4 bg-indigo-50 border-b border-gray-100">
+                    <h2 className="text-lg font-medium text-[#00256c] flex items-center gap-2">
+                      <User size={20} className="text-[#00256c]" />
+                      Taxpayer Information
                     </h2>
                   </div>
-                  <div className="p-6">
+                  <div className="p-4">
                     {investigation.taxpayers.map((taxpayer, index) => (
-                      <div key={taxpayer.id || index} className="mb-6 last:mb-0">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                          <div className="bg-gray-50 px-4 py-2 rounded-lg border border-gray-100">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              GSTIN
-                            </label>
-                            <p className="text-gray-900 font-medium">{taxpayer.gstin || '-'}</p>
+                      <div key={taxpayer.id || index} className="mb-4 last:mb-0">
+                        <div className="grid grid-cols-3 gap-4">
+                          <div className="flex items-center gap-3 p-3 bg-gray-50/50 rounded-sm border border-gray-100">
+                            <Building className="text-[#00256c]" size={18} />
+                            <div>
+                              <p className="text-xs text-gray-500">GSTIN</p>
+                              <p className="font-medium text-gray-900">{taxpayer.gstin || '-'}</p>
+                            </div>
                           </div>
-                          <div className="bg-gray-50 px-4 py-2 rounded-lg border border-gray-100">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Name
-                            </label>
-                            <p className="text-gray-900 font-medium">{taxpayer.name || '-'}</p>
+                          <div className="flex items-center gap-3 p-3 bg-gray-50/50 rounded-sm border border-gray-100">
+                            <User className="text-[#00256c]" size={18} />
+                            <div>
+                              <p className="text-xs text-gray-500">Name</p>
+                              <p className="font-medium text-gray-900">{taxpayer.name || '-'}</p>
+                            </div>
                           </div>
-                          <div className="bg-gray-50 px-4 py-2 rounded-lg border border-gray-100">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Trade Name
-                            </label>
-                            <p className="text-gray-900 font-medium">{taxpayer.trade_name || '-'}</p>
+                          <div className="flex items-center gap-3 p-3 bg-gray-50/50 rounded-sm border border-gray-100">
+                            <Building className="text-[#00256c]" size={18} />
+                            <div>
+                              <p className="text-xs text-gray-500">Trade Name</p>
+                              <p className="font-medium text-gray-900">{taxpayer.trade_name || '-'}</p>
+                            </div>
                           </div>
-                          <div className="bg-gray-50 px-4 py-2 rounded-lg border border-gray-100">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Email
-                            </label>
-                            <p className="text-gray-900 font-medium">{taxpayer.email || '-'}</p>
+                          <div className="flex items-center gap-3 p-3 bg-gray-50/50 rounded-sm border border-gray-100">
+                            <Mail className="text-[#00256c]" size={18} />
+                            <div>
+                              <p className="text-xs text-gray-500">Email</p>
+                              <p className="font-medium text-gray-900">{taxpayer.email || '-'}</p>
+                            </div>
                           </div>
-                          <div className="bg-gray-50 px-4 py-2 rounded-lg border border-gray-100">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Phone Number
-                            </label>
-                            <p className="text-gray-900 font-medium">{taxpayer.phone_number || '-'}</p>
+                          <div className="flex items-center gap-3 p-3 bg-gray-50/50 rounded-sm border border-gray-100">
+                            <Phone className="text-[#00256c]" size={18} />
+                            <div>
+                              <p className="text-xs text-gray-500">Phone</p>
+                              <p className="font-medium text-gray-900">{taxpayer.phone_number || '-'}</p>
+                            </div>
                           </div>
-                          <div className="bg-gray-50 px-4 py-2 rounded-lg border border-gray-100">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Division
-                            </label>
-                            <p className="text-gray-900 font-medium">{taxpayer.division_name || '-'}</p>
+                          <div className="flex items-center gap-3 p-3 bg-gray-50/50 rounded-sm border border-gray-100">
+                            <Building className="text-[#00256c]" size={18} />
+                            <div>
+                              <p className="text-xs text-gray-500">Division</p>
+                              <p className="font-medium text-gray-900">{taxpayer.division_name || '-'}</p>
+                            </div>
                           </div>
-                          <div className="bg-gray-50 px-4 py-2 rounded-lg border border-gray-100">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Range
-                            </label>
-                            <p className="text-gray-900 font-medium">{taxpayer.range_name || '-'}</p>
+                          <div className="flex items-center gap-3 p-3 bg-gray-50/50 rounded-sm border border-gray-100">
+                            <Building className="text-[#00256c]" size={18} />
+                            <div>
+                              <p className="text-xs text-gray-500">Range</p>
+                              <p className="font-medium text-gray-900">{taxpayer.range_name || '-'}</p>
+                            </div>
                           </div>
-                          <div className="md:col-span-2 bg-gray-50 px-4 py-2 rounded-lg border border-gray-100">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Address
-                            </label>
-                            <p className="text-gray-900 font-medium">{taxpayer.address || '-'}</p>
+                          <div className="flex items-center gap-3 p-3 bg-gray-50/50 rounded-sm border border-gray-100 col-span-2">
+                            <MapPin className="text-[#00256c]" size={18} />
+                            <div className="w-full">
+                              <p className="text-xs text-gray-500">Address</p>
+                              <p className="font-medium text-gray-900">{taxpayer.address || '-'}</p>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -336,8 +391,9 @@ const InvestigationDetails = () => {
         {/* Action Buttons Sidebar */}
         <div className="md:col-span-1">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden sticky top-4">
-            <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">
+            <div className="p-3 border-b border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                <Plus size={20} className="text-blue-600" />
                 Actions
               </h2>
             </div>
@@ -346,16 +402,13 @@ const InvestigationDetails = () => {
                 <button
                   key={index}
                   onClick={() => handleActionClick(action.name)}
-                  className={`w-full flex items-center justify-between p-3 rounded-lg transition-colors ${
+                  className={`w-full flex items-center justify-between p-2 mb-1 rounded-lg transition-colors text-sm ${
                     activePage === action.name.toLowerCase().replace(/\s+/g, '-')
-                      ? 'bg-blue-50 text-blue-700'
-                      : 'text-gray-600 hover:bg-gray-50'
+                      ? 'bg-[#e6ecf7] text-[#00256c]'
+                      : 'text-gray-600 hover:bg-[#e6ecf7]'
                   }`}
                 >
-                  <div className="flex items-center gap-2">
-                    <Plus size={18} />
-                    <span className="text-sm font-medium">{action.name}</span>
-                  </div>
+                  <span className="font-medium">{action.name}</span>
                   <ChevronRight size={16} />
                 </button>
               ))}
