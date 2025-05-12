@@ -10,13 +10,20 @@ const Investigation = () => {
     formData,
     taxpayerData,
     jurisdictionData,
+    sourceOptions,
+    divisionOptions,
+    rangeOptions,
+    isLoading,
+    error,
     handleChange,
     handleDateChange,
     handleTaxpayerChange,
     handleJurisdictionChange,
+    handleDivisionChange,
     handleSubmit,
+    postInvestigation,
+    fetchOptions
   } = useForm();
-
 
   // Function to generate year ranges
   const generateYearRanges = () => {
@@ -34,42 +41,14 @@ const Investigation = () => {
   };
 
   const navigate = useNavigate();
-
-  // State for dropdown options
-  const [sourceOptions, setSourceOptions] = useState([]);
-  const [divisionOptions, setDivisionOptions] = useState([]);
-  const [rangeOptions, setRangeOptions] = useState([]);
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [activeSection, setActiveSection] = useState("investigation");
 
-  // Fetch source and division options when component mounts
+  // Fetch options when component mounts
   useEffect(() => {
-    setSourceOptions([
-      { value: "1", label: "Intelligence" },
-      { value: "2", label: "CIU" },
-      { value: "3", label: "DGARM" },
-      { value: "4", label: "Informant/Complaint" },
-      { value: "5", label: "Reference from other Commissionerate" },
-    ]);
-
-    setDivisionOptions([
-      { value: "1", label: "1" },
-      { value: "2", label: "2" },
-      { value: "3", label: "3" },
-      { value: "4", label: "4" },
-      { value: "5", label: "5" },
-    ]);
-
-    setRangeOptions([
-      { value: "1", label: "1" },
-      { value: "2", label: "2" },
-      { value: "3", label: "3" },
-      { value: "4", label: "4" },
-      { value: "5", label: "5" },
-    ]);
+    fetchOptions();
   }, []);
 
   // Reset form after successful submission
@@ -91,8 +70,7 @@ const Investigation = () => {
     setSubmitSuccess(false);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await postInvestigation();
       setSubmitSuccess(true);
     } catch (error) {
       setSubmitError(error.message || 'Failed to submit investigation');
@@ -100,7 +78,6 @@ const Investigation = () => {
       setIsSubmitting(false);
     }
   };
-
 
   const handleBackToListing = () => {
     navigate("/investigations");
@@ -123,7 +100,6 @@ const Investigation = () => {
         <p className="text-gray-600 mt-1">Fill in the details below to register a new investigation</p>
       </div>
 
-
       {/* Status Messages */}
       <div className="mb-6 space-y-3">
         {error && (
@@ -141,13 +117,6 @@ const Investigation = () => {
           </div>
         )}
 
-      {submitError && (
-        <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-          {submitError}
-        </div>
-      )}
-
-
         {submitSuccess && (
           <div className="p-4 bg-green-50 border-l-4 border-green-500 rounded-r">
             <div className="flex items-center">
@@ -162,7 +131,6 @@ const Investigation = () => {
             </div>
           </div>
         )}
-
 
         {submitError && (
           <div className="p-4 bg-red-50 border-l-4 border-red-500 rounded-r">
@@ -220,7 +188,6 @@ const Investigation = () => {
           </button>
         </nav>
       </div>
-
 
       <form onSubmit={handleFormSubmit}>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -372,7 +339,6 @@ const Investigation = () => {
               <h2 className="text-lg font-semibold text-gray-800">
                 Division & Range
               </h2>
-
             </div>
 
             <div className="space-y-4">
@@ -403,36 +369,6 @@ const Investigation = () => {
                   className="w-full py-2 border border-gray-50 rounded-md focus-within:border-[#00256c] "
                   disabled={!jurisdictionData.division_name}
                 />
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Division Name
-                  </label>
-                  <CustomDropDown
-                    name="division_name"
-                    values={divisionOptions}
-                    placeholder="Select division"
-                    value={jurisdictionData.division_name}
-                    onChange={handleJurisdictionChange}
-                    className="w-full"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Range Name
-                  </label>
-                  <CustomDropDown
-                    name="range_name"
-                    values={rangeOptions}
-                    placeholder="Select range"
-                    value={jurisdictionData.range_name}
-                    onChange={handleJurisdictionChange}
-                    className="w-full"
-                  />
-                </div>
-
               </div>
             </div>
           </div>

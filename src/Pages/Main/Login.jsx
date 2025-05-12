@@ -16,9 +16,7 @@ const Login = () => {
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     try {
-
       const response = await fetch(`${import.meta.env.VITE_BACKEND_API}/api/auth/login/`, {
-
         method: 'POST',
         headers: {
           'accept': 'application/json',
@@ -35,18 +33,9 @@ const Login = () => {
       }
 
       const data = await response.json();
-      */
       
-      // Temporary mock data matching the expected format
-      const mockData = {
-        refresh: "eyJhbGciOiJFo39GvKuAexrETIuNPKC9hCnOy_GsA8-s",
-        access: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ2Nzc2Mzg0LCJpYXQiOjE3NDY2ODk5ODQsImp0aSI6IjBlYmFjNjNjYmIzODQ0ODc5ZjM0Njg3MDdkOTk0MmY4IiwidXNlcl9pZCI6MX0._O1ZW3Azg-WdpA0MSdoVCPpjfp8Q0-xG3b92HFd5oQU",
-        username: "admin",
-        email: ""
-      };
-      
-      // Store the mock data in localStorage
-      localStorage.setItem("userData", JSON.stringify(mockData));
+      // Store the entire response data in localStorage
+      localStorage.setItem("userData", JSON.stringify(data));
       
       // Redirect to home/dashboard
       window.location.href = "/";
